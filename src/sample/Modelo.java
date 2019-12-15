@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 
 
 public class Modelo extends Application {
+    // estructura
+    Controller ctrler = new Controller();
+
     // paneles base
     private Scene root;
     private Pane base;
@@ -46,8 +49,14 @@ public class Modelo extends Application {
         form.add(pwdTxtf,1,1);
 
         buttonContainer = new HBox();
-        submit = new Button();
-        cancel = new Button();
+        submit = new Button("Aceptar");
+        submit.setOnAction((e) -> {
+            ctrler.mensaje();
+        });
+        cancel = new Button("Cancelar");
+        cancel.setOnAction((e) -> {
+            ctrler.mensaje();
+        });
         buttonContainer.getChildren().addAll(submit,cancel);
 
         login.setBottom(buttonContainer);
@@ -59,6 +68,7 @@ public class Modelo extends Application {
     public void start(Stage primaryStage) throws Exception{
         base = new Pane();
         generarLogin();
+        base.getChildren().add(login);
         root = new Scene(base,400,400);
         primaryStage.setTitle("TPV");
         primaryStage.setScene(root);
