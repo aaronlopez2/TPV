@@ -67,7 +67,7 @@ public class Vista extends Application {
                     if(keyEvent.getCode().equals(KeyCode.ENTER)){ // si esa tecla es enter se envia la información
                         System.out.println("Has pulsado Enter");
                         autentication = ctrler.Aceptar(userTxtf.getText(),pwdTxtf.getText()); // comprobar el usuario y la contraseña introducidos
-
+                        ctrler.autenticar(autentication);
                     }
                 } catch (Exception err) {
                     System.err.println("ERROR ERROR ERROR, ha esplotado en algun momento del login");

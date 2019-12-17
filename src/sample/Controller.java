@@ -1,10 +1,5 @@
 package sample;
 
-import javafx.scene.input.KeyCode;
-
-import javax.crypto.spec.PBEParameterSpec;
-import java.awt.event.KeyEvent;
-
 
 public class Controller {
 
@@ -22,12 +17,12 @@ public class Controller {
             return "Fallo";
         }
     }
-    public void autenticacion(String aut){
+    public boolean autenticar(String aut){
         if(aut.equals("Bien")) {
-
+            return true;
         } else if(aut.equals("Fallo")) {
-
+            return false;
         }
-
+        return false;
     }
 }

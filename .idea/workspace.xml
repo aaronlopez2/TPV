@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sample/Vista.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Modelo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Modelo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Vista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Vista.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,26 +209,26 @@
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1877" height="265" key="GridCell.Tab.0.bottom" timestamp="1576513945832">
+    <state width="1877" height="265" key="GridCell.Tab.0.bottom" timestamp="1576514925503">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="265" key="GridCell.Tab.0.bottom/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576513945832" />
-    <state width="1877" height="265" key="GridCell.Tab.0.center" timestamp="1576513945831">
+    <state width="1877" height="265" key="GridCell.Tab.0.bottom/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576514925503" />
+    <state width="1877" height="265" key="GridCell.Tab.0.center" timestamp="1576514925503">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="265" key="GridCell.Tab.0.center/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576513945831" />
-    <state width="1877" height="265" key="GridCell.Tab.0.left" timestamp="1576513945831">
+    <state width="1877" height="265" key="GridCell.Tab.0.center/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576514925503" />
+    <state width="1877" height="265" key="GridCell.Tab.0.left" timestamp="1576514925503">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="265" key="GridCell.Tab.0.left/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576513945831" />
-    <state width="1877" height="265" key="GridCell.Tab.0.right" timestamp="1576513945832">
+    <state width="1877" height="265" key="GridCell.Tab.0.left/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576514925503" />
+    <state width="1877" height="265" key="GridCell.Tab.0.right" timestamp="1576514925503">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="265" key="GridCell.Tab.0.right/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576513945832" />
-    <state x="661" y="343" key="com.intellij.ide.util.TipDialog" timestamp="1576506784222">
+    <state width="1877" height="265" key="GridCell.Tab.0.right/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576514925503" />
+    <state x="661" y="343" key="com.intellij.ide.util.TipDialog" timestamp="1576573648394">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="661" y="343" key="com.intellij.ide.util.TipDialog/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576506784222" />
+    <state x="661" y="343" key="com.intellij.ide.util.TipDialog/1920.0.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1576573648393" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1576513227767">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
