@@ -9,20 +9,19 @@ public class Controller {
         System.out.println("PRUEBA");
     }
 
-    public String Aceptar(String user, String pwd) {
+    public boolean Aceptar(String user, String pwd) {
         boolean log = model.Autenticar(user,pwd);
         if(log) {
-            return "Bien";
-        } else {
-            return "Fallo";
-        }
-    }
-    public boolean autenticar(String aut){
-        if(aut.equals("Bien")) {
             return true;
-        } else if(aut.equals("Fallo")) {
+        } else {
             return false;
         }
-        return false;
+    }
+    public boolean autenticar(Boolean aut){
+        if(aut) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
