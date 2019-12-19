@@ -137,6 +137,15 @@ public class Vista extends Application {
                 System.out.println("No tiene permisos");
         }
     }
+    private void panelBaseDependiente() { // el panel que se genera para el dependiente
+
+    }
+    private void panelBaseManager() {   // el panel que se genera para el supervisor
+
+    }
+    private void panelSysAdmin() { // panel para el administrador del sistemas
+
+    }
     private void panelBase(String user){
         // cuando boton pasa aceptar hace esto
         try {
