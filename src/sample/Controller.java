@@ -1,10 +1,5 @@
 package sample;
 
-import javafx.scene.input.KeyCode;
-
-import javax.crypto.spec.PBEParameterSpec;
-import java.awt.event.KeyEvent;
-
 
 public class Controller {
 
@@ -14,20 +9,19 @@ public class Controller {
         System.out.println("PRUEBA");
     }
 
-    public String Aceptar(String user, String pwd) {
+    public boolean Aceptar(String user, String pwd) {
         boolean log = model.Autenticar(user,pwd);
         if(log) {
-            return "Bien";
+            return true;
         } else {
-            return "Fallo";
+            return false;
         }
     }
-    public void autenticacion(String aut){
-        if(aut.equals("Bien")) {
-
-        } else if(aut.equals("Fallo")) {
-
+    public boolean autenticar(Boolean aut){
+        if(aut) {
+            return true;
+        } else {
+            return false;
         }
-
     }
 }
