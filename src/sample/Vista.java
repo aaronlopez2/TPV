@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -41,9 +43,15 @@ public class Vista extends Application {
     private StackPane base;
     private StackPane stackBase; // panel base para GUI
     private GridPane form; // texto y etiquetas
+
+    public GridPane getButtonsUserBase() {
+        return buttonsUserBase;
+    }
+
     private GridPane buttonsUserBase; // botones para la base de usuarios
     private BorderPane login,bpBaseTpv; // grid pane hbox
     private HBox buttonContainer; // contiene botones aceptar y cancelar en el login
+    private VBox listContainer;
     private StackPane gridButtonsContainer; // centrar los botones del gridPane
 
     // botones
@@ -61,6 +69,16 @@ public class Vista extends Application {
     private MenuBar topTools;
     private Menu fileMenu, editMenu, windowMenu, helpMenu;
     private MenuItem[] itemsFile,itemsEdit,itemsWindow,itemsHelp;
+
+    // arrays
+    String[] listadoPedidos;
+    private void initializeArrays() {
+        int length = 50; // este variará despues de conectarse con la bbdd
+        listadoPedidos = new String[length];
+        for (int i = 0; i < length; i++) {
+            listadoPedidos[i] = "Este texto es de prueba "+0+0+i;
+        }
+    }
 
     // generate objects
     private void generateMenuItems() {
@@ -83,11 +101,35 @@ public class Vista extends Application {
         buttonsBase = new Button[5];
         for (int i = 0; i < buttonsBase.length; i++) {
             Button bot = new Button("BOTON "+i);
+
             bot.setPrefSize(150,150);
             buttonsBase[i] = bot;
+            buttonsBase[0].setText("LISTADO");
+            buttonsBase[0].setOnAction(e -> {
+                System.out.println("Boton listado funciona");
+                generatePaneLateralIzq();
+            });
         }
 
     }
+    private void generatePaneLateralIzq(){
+        ListView<String> list = new ListView<>();
+        ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
+        list.setItems(items);
+        list.prefWidth(500);
+        listContainer = new VBox();
+        listContainer.setStyle("-fx-background-color: #003322");
+        //listContainer.setPrefHeight(getButtonsUserBase().getHeight());
+        //listContainer.setMaxHeight(getButtonsUserBase().getHeight());
+        listContainer.getChildren().add(list);
+        //VBox.setVgrow(listContainer, Priority.ALWAYS);
+
+        bpBaseTpv.setLeft(listContainer);
+        list.prefHeight(1100);
+    }
+
+
+
 
     private void generarLogin() {
         login = new BorderPane();
@@ -198,6 +240,7 @@ public class Vista extends Application {
             rootTPV = new Scene(stackBase,1200,800);
             baseTPV.setScene(rootTPV);
             baseTPV.setMaximized(true);
+
             baseTPV.setResizable(false);
             baseTPV.show();
         } catch (Exception e) {
@@ -300,7 +343,6 @@ public class Vista extends Application {
 
     } // polimorfismo si se lanza pulsando enter
     private void metodoLanzarPanelBase(String user) {
-
             autentication = ctrler.Aceptar(userTxtf.getText(),pwdTxtf.getText()); // comprobar el usuario y la contraseña introducidos
             enter = ctrler.autenticar(autentication);
             if(enter) {
@@ -311,7 +353,6 @@ public class Vista extends Application {
                 errorPWD();
                 System.out.println("FALLO");
             }
-
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
 
@@ -340,9 +381,19 @@ public class Vista extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            ctrler.model.conectBBDD();
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         try {
             generateMenuItems();
             generateButtonsBase();
+            initializeArrays();
             loginTPV = new Stage();
             loginTPV = primaryStage;
             loginTPV.setResizable(false);
