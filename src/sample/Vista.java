@@ -385,7 +385,7 @@ public class Vista extends Application {
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
             ctrler.model.conectBBDD();
-
+            System.out.println("working!!");
         } catch (Exception e)
         {
             e.printStackTrace();
