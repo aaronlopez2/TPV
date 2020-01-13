@@ -22,10 +22,12 @@ import java.awt.*;
 
 
 public class Vista extends Application {
+
     // variables
     private Boolean autentication;
     private Boolean enter;
     private Boolean hideLog = false;
+    private int userlvl;
     // Instancias
     Controller ctrler = new Controller();
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); // tool kit para la memoria tener el tamaño de la pantalla y hacer adaptables los elementos del programa
@@ -55,7 +57,7 @@ public class Vista extends Application {
     private StackPane gridButtonsContainer; // centrar los botones del gridPane
 
     // botones
-    private Button submit,cancel;
+    private Button submit,cancel,local,externo,volver;
     private Button[] buttonsBase;
 
     // etiquetas
@@ -72,8 +74,10 @@ public class Vista extends Application {
 
     // arrays
     String[] listadoPedidos;
+    String[] buttonsNam;
     private void initializeArrays() {
         int length = 50; // este variará despues de conectarse con la bbdd
+        buttonsNam = new String[]{"Almacen","Ventas","Documentos","Mantenimiento","Informes","Adm. usuarios"};
         listadoPedidos = new String[length];
         for (int i = 0; i < length; i++) {
             listadoPedidos[i] = "Este texto es de prueba "+0+0+i;
@@ -81,6 +85,30 @@ public class Vista extends Application {
     }
 
     // generate objects
+    private void generateAlmacenButtons() {
+        local = new Button("Genero En Tienda");
+        externo = new Button("Pedido Almacen");
+        volver = new Button("Atrás");
+        local.setPrefSize(150,150);
+        externo.setPrefSize(150,150);
+        local.setOnAction((e) -> {
+            generatePaneLateralIzq();
+        });
+        externo.setOnAction((e) -> {
+
+        });
+        volver.setOnAction((e) -> {
+            buttonsUserBase.getChildren().removeAll(local,externo,volver);
+            initArrayButtons(this.userlvl);
+            gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
+        });
+
+
+        buttonsUserBase.add(local, 0,0);
+        buttonsUserBase.add(externo,1,0);
+        buttonsUserBase.add(volver,2,0);
+
+    }
     private void generateMenuItems() {
         itemsFile = new MenuItem[10];
         itemsEdit = new MenuItem[10];
@@ -97,18 +125,75 @@ public class Vista extends Application {
             itemsHelp[i] = itemHelp;
         }
     } // generar barra de herramientas
-    private void generateButtonsBase() { // inicializar los botones del TPV
-        buttonsBase = new Button[5];
-        for (int i = 0; i < buttonsBase.length; i++) {
-            Button bot = new Button("BOTON "+i);
+    private void initArrayButtons(int permisos) { // inicializar los botones del TPV
+        switch (permisos) {
+            case 1:
+                buttonsBase = new Button[3];
+                for (int i = 0; i < buttonsBase.length; i++) {
+                    Button bot = new Button();
+                    bot.setPrefSize(150,150);
+                    buttonsBase[i] = bot;
+                    buttonsBase[i].setText(buttonsNam[i]);
+                    System.out.println(buttonsBase[i]);
+                }
+                System.out.println("Permiso nivel 1");
+                System.out.println(buttonsBase.length);
+                break;
+            case 2:
+                buttonsBase = new Button[5];
+                for (int i = 0; i < buttonsBase.length; i++) {
+                    Button bot = new Button();
+                    bot.setPrefSize(150,150);
+                    buttonsBase[i] = bot;
+                    buttonsBase[i].setText(buttonsNam[i]);
+                }
+                System.out.println("Permiso nivel 2");
+                System.out.println(buttonsBase.length);
+                break;
+            case 3:
+                buttonsBase = new Button[6];
+                for (int i = 0; i < buttonsBase.length; i++) {
+                    Button bot = new Button();
+                    bot.setPrefSize(150,150);
+                    buttonsBase[i] = bot;
+                    buttonsBase[i].setText(buttonsNam[i]);
+                }
+                System.out.println("Permiso nivel 3");
+                System.out.println(buttonsBase.length);
+                break;
+            default:
+                System.out.println("DEfault switch generate buttons base error no case entered");
+        }
+        try
+        {
 
-            bot.setPrefSize(150,150);
-            buttonsBase[i] = bot;
-            buttonsBase[0].setText("LISTADO");
-            buttonsBase[0].setOnAction(e -> {
-                System.out.println("Boton listado funciona");
+            buttonsBase[0].setOnAction((e) -> { // ALMACEN
+                System.out.println("Entra");
+                // buscar panel de los botones y limpiar
+                buttonsUserBase.getChildren().removeAll(buttonsBase);
+                generateAlmacenButtons();
+            });// ALMACEN
+            buttonsBase[1].setOnAction(e -> { // VENTAS
+
+            });  // VENTAS
+            buttonsBase[2].setOnAction(e -> { // DOCUMENTOS --- LISTADOS
                 generatePaneLateralIzq();
-            });
+            }); // DOCUMENTOS --- LISTADOS
+            buttonsBase[3].setOnAction(e -> { // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
+
+            }); // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
+            buttonsBase[4].setOnAction(e ->{ // INFORMES --- FILTROS ESTADISTICAS
+
+            }); // INFORMES --- FILTROS ESTADISTICAS
+            buttonsBase[5].setOnAction(e -> { // ADM. USUARIOS --- AÑADIR USUARIOS
+
+            }); // ADM. USUARIOS --- AÑADIR USUARIOS
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            System.out.println("FALLO EN ALGUN BOTON, SEGURAMENTE POR NO EXISTIR");
+            System.out.println("O fallo por otra cosa");
         }
 
     }
@@ -170,9 +255,6 @@ public class Vista extends Application {
             }
             ctrler.mensaje();
         });
-        submit.setOnKeyPressed(keyEvent -> { // evento al pulsar una tecla
-
-        });
         cancel = new Button("Cancelar");
         cancel.setOnAction((e) -> {
             System.exit(0);
@@ -198,28 +280,34 @@ public class Vista extends Application {
         // se buscará el nombre del usuario en la base de datos, en la tabla el tipo de permiso
         // comprobacion de permiso
         int permiso = 1;
-        generarBotonesBase(permiso);
+        stackBase.getChildren().add(bpBaseTpv);
+        bpBaseTpv.setStyle("-fx-background-color: #486187");
+        gridButtonsContainer.setAlignment(Pos.CENTER);
+        gridButtonsContainer.setPadding(new Insets(0,40,0,40));
+        //gridButtonsContainer.setMaxHeight(screenHeight);
+        //gridButtonsContainer.setMaxWidth(screenWidth);
+        gridButtonsContainer.setStyle("-fx-background-color: #ffffff");
+        bpBaseTpv.setCenter(gridButtonsContainer);
+        bpBaseTpv.setBottom(new Label("PRUEBA DE ETIQUETA Y ESPACIO AVISO LEGAL"));
         switch(permiso){
             case 0:
                 break;
             case 1:// permiso == 1 para el dependiente
-                baseTPV.widthProperty().addListener(e -> {
-
-                });
-                stackBase.getChildren().add(bpBaseTpv);
-                bpBaseTpv.setStyle("-fx-background-color: #486187");
                 bpBaseTpv.setTop(barraHerramientasPanelBase());
-                gridButtonsContainer.getChildren().add(buttonsUserBase);
-                gridButtonsContainer.setAlignment(Pos.CENTER);
-                gridButtonsContainer.setPadding(new Insets(0,40,0,40));
-                //gridButtonsContainer.setMaxHeight(screenHeight);
-                //gridButtonsContainer.setMaxWidth(screenWidth);
-                gridButtonsContainer.setStyle("-fx-background-color: #ffffff");
-                bpBaseTpv.setCenter(gridButtonsContainer);
-                bpBaseTpv.setBottom(new Label("PRUEBA DE ETIQUETA Y ESPACIO AVISO LEGAL"));
-
+                try {
+                    gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
+                } catch (Exception ex) {
+                    System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
+                }
                 break;
             case 2:// permiso == 2 para el supervisor
+                System.out.println("permisos de nivel 2");
+                bpBaseTpv.setTop(barraHerramientasPanelBase());
+                try {
+                    gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
+                } catch (Exception ex) {
+                    System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
+                }
                 break;
             case 3:// permiso == 3 para el administrador del sistema
                 break;
@@ -235,7 +323,6 @@ public class Vista extends Application {
         // cuando boton pasa aceptar hace esto
         try {
             generarPanelBase(user);
-
 
             rootTPV = new Scene(stackBase,1200,800);
             baseTPV.setScene(rootTPV);
@@ -269,59 +356,30 @@ public class Vista extends Application {
         } catch (Exception ex) {
             System.out.println("ALGO HA FALLADO");
         }
-
         return topTools;
     }
     private GridPane generarBotonesBase(int userlvl) {
+        this.userlvl = userlvl;
         try {
+            initArrayButtons(userlvl);
             buttonsUserBase = new GridPane();
-            buttonsUserBase.setGridLinesVisible(true);
+
+            //buttonsUserBase.setGridLinesVisible(true);
             buttonsUserBase.setPrefSize(screenWidth,screenHeight);
             buttonsUserBase.setAlignment(Pos.CENTER);
-            buttonsUserBase.setHgap(40);
+            buttonsUserBase.setHgap(200);
             buttonsUserBase.setVgap(55);
-            switch(userlvl) {
-                case 0:
-                    break;
-                case 1: // permiso para el dependiente
-                    for (int i = 0; i < buttonsBase.length; i++) {
-                        buttonsUserBase.add(buttonsBase[i], i,0);
-                    }
-                    //if (baseTPV.isFullScreen()) {
-                    //    for (int i = 0; i < buttonsBase.length; i++) {
-                    //        buttonsUserBase.add(buttonsBase[i], i,3);
-                    //    }
-                    //} else {
-                    //    for (int i = 0; i < buttonsBase.length; i++) {
-                    //        if( i > 2) {
-                    //            buttonsUserBase.add(buttonsBase[i], i,5);
-                    //        } else {
-                    //            buttonsUserBase.add(buttonsBase[i], i,3);
-                    //        }
-//
-                    //    }
-                    //}
-                    break;
-                case 2:// permiso == 2 para el supervisor
-                    break;
-                case 3:// permiso == 3 para el administrador del sistema
-                    break;
-                case -1:
-                    break;
-                default:
-                    System.out.println("ASSDASD");
 
+            for (int i = 0; i < buttonsBase.length; i++) {
+                buttonsUserBase.add(buttonsBase[i], i,0);
             }
+
+
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
-        return null;
+        return buttonsUserBase;
     }
-    private void resizeGridBotonesBase() { // ajustar la posicion de los botones del grid pane cuando se abra el panel lateral
-
-
-    }
-
 
     // control de paneles
     private void metodoLanzarPanelBase(String user, KeyEvent e) {
@@ -341,7 +399,7 @@ public class Vista extends Application {
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
 
-    } // polimorfismo si se lanza pulsando enter
+    }
     private void metodoLanzarPanelBase(String user) {
             autentication = ctrler.Aceptar(userTxtf.getText(),pwdTxtf.getText()); // comprobar el usuario y la contraseña introducidos
             enter = ctrler.autenticar(autentication);
@@ -356,7 +414,7 @@ public class Vista extends Application {
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
 
-    } // polimorfismo si se lanza pulsando aceptar
+    }
 
     // POP UPS
     private void errorPWD() {
@@ -389,11 +447,14 @@ public class Vista extends Application {
         } catch (Exception e)
         {
             e.printStackTrace();
+            System.out.println("Not working");
         }
         try {
-            generateMenuItems();
-            generateButtonsBase();
+            // inicialziar objetos
             initializeArrays();
+            generateMenuItems();
+            // inicializar objetos
+
             loginTPV = new Stage();
             loginTPV = primaryStage;
             loginTPV.setResizable(false);
