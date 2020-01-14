@@ -5,6 +5,7 @@ public class Controller {
 
     Modelo model = new Modelo();
 
+
     public void mensaje(){
         System.out.println("PRUEBA");
     }
@@ -18,6 +19,7 @@ public class Controller {
         }
     }
     public boolean autenticar(Boolean aut){
+
         if(aut) {
             return true;
         } else {
