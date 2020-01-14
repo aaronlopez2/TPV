@@ -85,7 +85,25 @@ public class Vista extends Application {
     }
 
     // generate objects
-    private void generateAlmacenButtons() {
+    private void generatePanelDer() {
+        ListView<String> list = new ListView<>();
+        ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
+        list.setItems(items);
+        list.prefWidth(500);
+        listContainer = new VBox();
+        listContainer.setStyle("-fx-background-color: #003322");
+        //listContainer.setPrefHeight(getButtonsUserBase().getHeight());
+        //listContainer.setMaxHeight(getButtonsUserBase().getHeight());
+        listContainer.getChildren().add(list);
+        //VBox.setVgrow(listContainer, Priority.ALWAYS);
+
+        bpBaseTpv.setRight(listContainer);
+        list.prefHeight(1100);    }
+
+        boolean visibleLeft = false;
+        boolean visibleRight = false;
+
+        private void generateAlmacenButtons() {
         local = new Button("Genero En Tienda");
         externo = new Button("Pedido Almacen");
         volver = new Button("Atrás");
@@ -93,11 +111,31 @@ public class Vista extends Application {
         externo.setPrefSize(150,150);
         local.setOnAction((e) -> {
             generatePaneLateralIzq();
+            if(visibleLeft) {
+                bpBaseTpv.setLeft(null);
+                visibleLeft = false;
+            } else {
+                visibleLeft = true;
+            }
+
         });
         externo.setOnAction((e) -> {
 
+            generatePanelDer();
+            if(visibleRight) {
+                bpBaseTpv.setRight(null);
+                visibleRight = false;
+            } else {
+                visibleRight = true;
+            }
+
         });
         volver.setOnAction((e) -> {
+            if(bpBaseTpv.getRight() == null) {
+
+            } else {
+                bpBaseTpv.setRight(null);
+            }
             buttonsUserBase.getChildren().removeAll(local,externo,volver);
             initArrayButtons(this.userlvl);
             gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
@@ -174,10 +212,17 @@ public class Vista extends Application {
                 generateAlmacenButtons();
             });// ALMACEN
             buttonsBase[1].setOnAction(e -> { // VENTAS
-
+                buttonsUserBase.getChildren().removeAll(buttonsBase);
+                generateVentasPane();
             });  // VENTAS
             buttonsBase[2].setOnAction(e -> { // DOCUMENTOS --- LISTADOS
                 generatePaneLateralIzq();
+                if(visibleLeft) {
+                    bpBaseTpv.setLeft(null);
+                    visibleLeft = false;
+                } else {
+                    visibleLeft = true;
+                }
             }); // DOCUMENTOS --- LISTADOS
             buttonsBase[3].setOnAction(e -> { // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
 
@@ -195,6 +240,24 @@ public class Vista extends Application {
             System.out.println("FALLO EN ALGUN BOTON, SEGURAMENTE POR NO EXISTIR");
             System.out.println("O fallo por otra cosa");
         }
+
+    }
+    private TextField filtro;
+    private TextField marcaTF;
+    private TextField tallaTF;
+    private Label marca;
+    private Label talla;
+    private void generateVentasPane() {
+        filtro = new TextField();
+        marcaTF = new TextField();
+        tallaTF = new TextField();
+        marca = new Label("MARCA");
+        talla = new Label("TALLA");
+        buttonsUserBase.add(filtro,1,0);
+        buttonsUserBase.add(marca, 0,1);
+        buttonsUserBase.add(talla,0,2);
+        buttonsUserBase.add(marcaTF,1,1);
+        buttonsUserBase.add(tallaTF, 1,2);
 
     }
     private void generatePaneLateralIzq(){
