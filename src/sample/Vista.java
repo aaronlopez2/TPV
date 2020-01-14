@@ -57,15 +57,17 @@ public class Vista extends Application {
     private StackPane gridButtonsContainer; // centrar los botones del gridPane
 
     // botones
-    private Button submit,cancel,local,externo,volver;
+    private Button submit, cancel, local, externo, volver, volver2, crearUser;
     private Button[] buttonsBase;
 
     // etiquetas
-    private Label userLbl, pwdLbl;
+    private Label userLbl, pwdLbl, userLabel, passLabel, permisoLabel;
 
     // campos de texto
     private TextField userTxtf;
     private PasswordField pwdTxtf;
+    /*Vicent*/ private TextField userField;
+    /*Vicent*/ private TextField passField;
 
     // MenuBar, menu, menuItems
     private MenuBar topTools;
@@ -85,7 +87,25 @@ public class Vista extends Application {
     }
 
     // generate objects
-    private void generateAlmacenButtons() {
+    private void generatePanelDer() {
+        ListView<String> list = new ListView<>();
+        ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
+        list.setItems(items);
+        list.prefWidth(500);
+        listContainer = new VBox();
+        listContainer.setStyle("-fx-background-color: #003322");
+        //listContainer.setPrefHeight(getButtonsUserBase().getHeight());
+        //listContainer.setMaxHeight(getButtonsUserBase().getHeight());
+        listContainer.getChildren().add(list);
+        //VBox.setVgrow(listContainer, Priority.ALWAYS);
+
+        bpBaseTpv.setRight(listContainer);
+        list.prefHeight(1100);    }
+
+        boolean visibleLeft = false;
+        boolean visibleRight = false;
+
+        private void generateAlmacenButtons() {
         local = new Button("Genero En Tienda");
         externo = new Button("Pedido Almacen");
         volver = new Button("Atrás");
@@ -93,11 +113,31 @@ public class Vista extends Application {
         externo.setPrefSize(150,150);
         local.setOnAction((e) -> {
             generatePaneLateralIzq();
+            if(visibleLeft) {
+                bpBaseTpv.setLeft(null);
+                visibleLeft = false;
+            } else {
+                visibleLeft = true;
+            }
+
         });
         externo.setOnAction((e) -> {
 
+            generatePanelDer();
+            if(visibleRight) {
+                bpBaseTpv.setRight(null);
+                visibleRight = false;
+            } else {
+                visibleRight = true;
+            }
+
         });
         volver.setOnAction((e) -> {
+            if(bpBaseTpv.getRight() == null) {
+
+            } else {
+                bpBaseTpv.setRight(null);
+            }
             buttonsUserBase.getChildren().removeAll(local,externo,volver);
             initArrayButtons(this.userlvl);
             gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
@@ -174,10 +214,17 @@ public class Vista extends Application {
                 generateAlmacenButtons();
             });// ALMACEN
             buttonsBase[1].setOnAction(e -> { // VENTAS
-
+                buttonsUserBase.getChildren().removeAll(buttonsBase);
+                generateVentasPane();
             });  // VENTAS
             buttonsBase[2].setOnAction(e -> { // DOCUMENTOS --- LISTADOS
                 generatePaneLateralIzq();
+                if(visibleLeft) {
+                    bpBaseTpv.setLeft(null);
+                    visibleLeft = false;
+                } else {
+                    visibleLeft = true;
+                }
             }); // DOCUMENTOS --- LISTADOS
             buttonsBase[3].setOnAction(e -> { // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
 
@@ -186,7 +233,9 @@ public class Vista extends Application {
 
             }); // INFORMES --- FILTROS ESTADISTICAS
             buttonsBase[5].setOnAction(e -> { // ADM. USUARIOS --- AÑADIR USUARIOS
-
+            	//Vicent
+            	buttonsUserBase.getChildren().removeAll(buttonsBase);
+            	administraUsersView();
             }); // ADM. USUARIOS --- AÑADIR USUARIOS
 
         } catch (Exception ex)
@@ -195,6 +244,24 @@ public class Vista extends Application {
             System.out.println("FALLO EN ALGUN BOTON, SEGURAMENTE POR NO EXISTIR");
             System.out.println("O fallo por otra cosa");
         }
+
+    }
+    private TextField filtro;
+    private TextField marcaTF;
+    private TextField tallaTF;
+    private Label marca;
+    private Label talla;
+    private void generateVentasPane() {
+        filtro = new TextField();
+        marcaTF = new TextField();
+        tallaTF = new TextField();
+        marca = new Label("MARCA");
+        talla = new Label("TALLA");
+        buttonsUserBase.add(filtro,1,0);
+        buttonsUserBase.add(marca, 0,1);
+        buttonsUserBase.add(talla,0,2);
+        buttonsUserBase.add(marcaTF,1,1);
+        buttonsUserBase.add(tallaTF, 1,2);
 
     }
     private void generatePaneLateralIzq(){
@@ -279,7 +346,7 @@ public class Vista extends Application {
         stackBase.setMaxWidth(screenWidth);
         // se buscará el nombre del usuario en la base de datos, en la tabla el tipo de permiso
         // comprobacion de permiso
-        int permiso = 1;
+        int permiso = 3;
         stackBase.getChildren().add(bpBaseTpv);
         bpBaseTpv.setStyle("-fx-background-color: #486187");
         gridButtonsContainer.setAlignment(Pos.CENTER);
@@ -310,6 +377,13 @@ public class Vista extends Application {
                 }
                 break;
             case 3:// permiso == 3 para el administrador del sistema
+            	 System.out.println("permisos de nivel 3");
+                 bpBaseTpv.setTop(barraHerramientasPanelBase());
+                 try {
+                     gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
+                 } catch (Exception ex) {
+                     System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
+                 }
                 break;
             case -1:// permiso == -1 si hay un fallo en la BBDD
                 System.err.println("ERROR 500 No se encuentra usuario en la BBDD");
@@ -476,4 +550,60 @@ public class Vista extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    //Codigo Vicent
+    
+    private void administraUsersView() {
+    	
+    	
+    	userLabel = new Label("Usuario");
+        passLabel = new Label("Contraseña");
+        permisoLabel = new Label("Permisos");
+        
+        userField = new TextField();
+        userField.setPromptText("Nombre o correo electronico");
+        passField = new TextField();
+        passField.setPromptText("Contraseña");
+        
+        //ListView<String> lvl = new ListView<>();
+        ObservableList<String> permis = FXCollections.observableArrayList();
+        permis.addAll("1", "2", "3");
+   	 	ComboBox<String> cbx = new ComboBox<>(permis);
+   	 	
+   	 	
+        crearUser = new Button("Crear");
+        crearUser.setOnAction((e) -> {
+        	Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Usuario creado");
+            alert.setHeaderText(null);
+            alert.setContentText("El usuario se ha a�adido correctamente");
+            alert.showAndWait();
+        });
+        
+        volver2 = new Button("Atrás");
+        volver2.setOnAction((e) -> {
+            buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
+            initArrayButtons(this.userlvl);
+            gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
+        });
+        
+        buttonsUserBase.add(userLabel,0,0);
+        buttonsUserBase.add(userField,1,0);
+        buttonsUserBase.add(passLabel,0,1);
+        buttonsUserBase.add(passField,1,1);
+        buttonsUserBase.add(permisoLabel, 0, 2);
+        buttonsUserBase.add(cbx, 1, 2);
+        buttonsUserBase.add(crearUser, 0, 3);
+        buttonsUserBase.add(volver2, 1, 3);
+    	
+    }
+    /*
+     * 
+     ObservableList<String> items = FXCollections.observableArrayList();
+	 items.addAll("item-1", "item-2", "item-3", "item-4", "item-5");
+	 ComboBox<String> cbx = new ComboBox<>(items);
+     * 
+     * */
+    
+    //Fin Codigo Vicent
 }

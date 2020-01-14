@@ -2,17 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_windows/laf.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_windows/path.macros.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aws.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/codestyles/Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/colors.scheme.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/debugger.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ide-features-trainer.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ide.general.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inspection/Default.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Vista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Vista.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -74,10 +63,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Vista.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
+            <state relative-caret-position="254">
+              <caret line="219" column="33" lean-forward="true" selection-start-line="219" selection-start-column="33" selection-end-line="219" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#19064#19065#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -95,7 +85,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Modelo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="76">
               <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -121,11 +111,14 @@
       <find>stack</find>
       <find>stackBase</find>
       <find>bpBaseTpv</find>
-      <find>generarBotonesBase</find>
       <find>generateButtonsBase</find>
       <find>buttonsBase</find>
-      <find>buttonsUserBase</find>
       <find>initArrayButtons</find>
+      <find>generarBotonesBase</find>
+      <find>int permiso</find>
+      <find>buttonsUserBase</find>
+      <find>generate</find>
+      <find>generatePa</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Aarón\IdeaProjects\TPV_Deportes\src</dir>
@@ -201,6 +194,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="jdk.selected.JAVA_MODULE" value="11" />
+    <property name="kotlin.migration.detection.enabled" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/librerias/hibernate-core-5.4.6.Final.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -340,8 +334,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19742814" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.19742814" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -448,16 +443,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/librerias/hibernate.cfg.xml" />
     <entry file="file://$PROJECT_DIR$/.idea/libraries/Hibernate_Tools_509.xml" />
-    <entry file="file://$PROJECT_DIR$/src/sample/Vista.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -467,10 +452,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Modelo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
+        <state relative-caret-position="76">
           <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Vista.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="219" column="33" lean-forward="true" selection-start-line="219" selection-start-column="33" selection-end-line="219" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#19064#19065#0" expanded="true" />
           </folding>
         </state>
       </provider>
