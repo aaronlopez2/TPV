@@ -19,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.rmi.server.ExportException;
 
 
 public class Vista extends Application {
@@ -60,11 +61,19 @@ public class Vista extends Application {
     private Button submit, cancel, local, externo, volver, volver2, crearUser;
     private Button[] buttonsBase;
 
+
+
     // etiquetas
     private Label userLbl, pwdLbl, userLabel, passLabel, permisoLabel;
+    private Label marca;
+    private Label talla;
 
     // campos de texto
     private TextField userTxtf;
+    private TextField filtro;
+    private TextField marcaTF;
+    private TextField tallaTF;
+
     private PasswordField pwdTxtf;
     /*Vicent*/ private TextField userField;
     /*Vicent*/ private TextField passField;
@@ -100,12 +109,14 @@ public class Vista extends Application {
         //VBox.setVgrow(listContainer, Priority.ALWAYS);
 
         bpBaseTpv.setRight(listContainer);
-        list.prefHeight(1100);    }
+        list.prefHeight(1100);
+    }
 
-        boolean visibleLeft = false;
-        boolean visibleRight = false;
+    boolean visibleLeft = false;
+    boolean visibleRight = false;
 
-        private void generateAlmacenButtons() {
+    private void generateAlmacenButtons() {
+
         local = new Button("Genero En Tienda");
         externo = new Button("Pedido Almacen");
         volver = new Button("Atrás");
@@ -166,7 +177,8 @@ public class Vista extends Application {
         }
     } // generar barra de herramientas
     private void initArrayButtons(int permisos) { // inicializar los botones del TPV
-        switch (permisos) {
+        switch (permisos)
+        {
             case 1:
                 buttonsBase = new Button[3];
                 for (int i = 0; i < buttonsBase.length; i++) {
@@ -206,7 +218,6 @@ public class Vista extends Application {
         }
         try
         {
-
             buttonsBase[0].setOnAction((e) -> { // ALMACEN
                 System.out.println("Entra");
                 // buscar panel de los botones y limpiar
@@ -246,22 +257,94 @@ public class Vista extends Application {
         }
 
     }
-    private TextField filtro;
-    private TextField marcaTF;
-    private TextField tallaTF;
-    private Label marca;
-    private Label talla;
+
+
+    Button volver3,filterButonVentasPane,cleanFilters;
+    Label modelo;
+    TextField modeloTF;
     private void generateVentasPane() {
+        volver3 = new Button("Atras");
+        filterButonVentasPane = new Button("Filtrar");
+        cleanFilters = new Button("Limpiar filtros");
         filtro = new TextField();
         marcaTF = new TextField();
-        tallaTF = new TextField();
+        tallaTF = new TextField("0");
         marca = new Label("MARCA");
         talla = new Label("TALLA");
+        modelo = new Label("MODELO");
+        modeloTF = new TextField();
+
+        try
+        {
+            cleanFilters.setOnAction((e) -> {
+                filtro.setText("");
+                marcaTF.setText("");
+                modeloTF.setText("");
+                tallaTF.setText("0");
+
+            });
+            volver3.setOnAction((e) -> {
+                buttonsUserBase.getChildren().removeAll(filtro,marca,tallaTF
+                        ,filterButonVentasPane
+                        ,marcaTF,talla,volver3,cleanFilters,
+                        modelo, modeloTF);
+                initArrayButtons(this.userlvl);
+                gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
+            });
+            filterButonVentasPane.setOnAction((e) -> {
+                String nombreProd = filtro.getText();
+                String prodBrand = marcaTF.getText();
+                int tallaProd;
+                try
+                {
+                    tallaProd = Integer.parseInt(tallaTF.getText());
+                    String modeloProd = modeloTF.getText();
+                    System.out.println(nombreProd); // recoge el nombre y lo guarda bien
+                    if(marcaTF.getText().equals("") && tallaTF.getText().equals("0") && modeloTF.getText().equals("")) {
+                        popUpAlerta("select * from articulos where nombre = nombreProd \n" +nombreProd+ "= escrito text field");
+                    } else if(!marcaTF.getText().equals("") && tallaTF.getText().equals("0") && modeloTF.getText().equals("")){
+                        popUpAlerta("select * from articulos where nombre = nombreProd \n"
+                                +"and marca = prodBrand \n"
+                                +nombreProd+ " = escrito text field \n"
+                                +prodBrand+ " = escrito text field \n"
+
+                        );
+                    } else if(!marcaTF.getText().equals("") && !tallaTF.getText().equals("0") && modeloTF.getText().equals("")) {
+                        popUpAlerta("select * from articulos where nombre = nombreProd \n"
+                                +"and marca = prodBrand and talla = tallaProd\n"
+                                +nombreProd+ " = escrito text field \n"
+                                +prodBrand+ " = escrito text field \n"
+                                +tallaProd+ " = talla"
+                        );
+                    } else if(!marcaTF.getText().equals("") && !tallaTF.getText().equals("0") && !modeloTF.getText().equals("")){
+                        popUpAlerta("select * from articulos where nombre = nombreProd \n"
+                                +"and marca = prodBrand and talla = tallaProd and modelo = modeloProd\n"
+                                +nombreProd+ " = escrito text field \n"
+                                +prodBrand+ " = escrito text field \n"
+                                +tallaProd+ " = talla\n"
+                                +modeloProd+ " = modelo"
+                        );
+                    }
+                } catch (Exception exc) {
+                    popUpAlerta("introduzca un numero en la talla por favor");
+                }
+                // conectar con la BBDD para comprobar que hace un select * from articulos where nombre = nombreProd
+            });
+
+        } catch (Exception e) {
+            popUpAlerta();
+        }
+
         buttonsUserBase.add(filtro,1,0);
+        buttonsUserBase.add(filterButonVentasPane,2,0);
+        buttonsUserBase.add(cleanFilters,3,0);
         buttonsUserBase.add(marca, 0,1);
         buttonsUserBase.add(talla,0,2);
+        buttonsUserBase.add(modelo,0,3);
         buttonsUserBase.add(marcaTF,1,1);
         buttonsUserBase.add(tallaTF, 1,2);
+        buttonsUserBase.add(modeloTF,1,3);
+        buttonsUserBase.add(volver3,3,3);
 
     }
     private void generatePaneLateralIzq(){
@@ -279,10 +362,6 @@ public class Vista extends Application {
         bpBaseTpv.setLeft(listContainer);
         list.prefHeight(1100);
     }
-
-
-
-
     private void generarLogin() {
         login = new BorderPane();
         login.setPadding(new Insets(20));
@@ -333,8 +412,6 @@ public class Vista extends Application {
 
         login.setBottom(buttonContainer);
         login.setLeft(form);
-
-
     }
     private void generarPanelBase(String user) {
         bpBaseTpv = new BorderPane();
@@ -360,14 +437,18 @@ public class Vista extends Application {
             case 0:
                 break;
             case 1:// permiso == 1 para el dependiente
+
                 bpBaseTpv.setTop(barraHerramientasPanelBase());
                 try {
                     gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
                 } catch (Exception ex) {
                     System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
                 }
+                buttonsUserBase.setHgap(200);
+                buttonsUserBase.setVgap(55);
                 break;
             case 2:// permiso == 2 para el supervisor
+
                 System.out.println("permisos de nivel 2");
                 bpBaseTpv.setTop(barraHerramientasPanelBase());
                 try {
@@ -375,15 +456,20 @@ public class Vista extends Application {
                 } catch (Exception ex) {
                     System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
                 }
+                buttonsUserBase.setHgap(100);
+                buttonsUserBase.setVgap(55);
                 break;
             case 3:// permiso == 3 para el administrador del sistema
             	 System.out.println("permisos de nivel 3");
+
                  bpBaseTpv.setTop(barraHerramientasPanelBase());
                  try {
+
                      gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
                  } catch (Exception ex) {
                      System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
                  }
+
                 break;
             case -1:// permiso == -1 si hay un fallo en la BBDD
                 System.err.println("ERROR 500 No se encuentra usuario en la BBDD");
@@ -395,16 +481,16 @@ public class Vista extends Application {
 
     private void panelBase(String user){
         // cuando boton pasa aceptar hace esto
-        try {
+        try
+        {
             generarPanelBase(user);
-
             rootTPV = new Scene(stackBase,1200,800);
             baseTPV.setScene(rootTPV);
             baseTPV.setMaximized(true);
-
             baseTPV.setResizable(false);
             baseTPV.show();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
@@ -434,23 +520,38 @@ public class Vista extends Application {
     }
     private GridPane generarBotonesBase(int userlvl) {
         this.userlvl = userlvl;
-        try {
-            initArrayButtons(userlvl);
+        try
+        {
             buttonsUserBase = new GridPane();
+            initArrayButtons(userlvl);
 
             //buttonsUserBase.setGridLinesVisible(true);
             buttonsUserBase.setPrefSize(screenWidth,screenHeight);
             buttonsUserBase.setAlignment(Pos.CENTER);
-            buttonsUserBase.setHgap(200);
-            buttonsUserBase.setVgap(55);
 
             for (int i = 0; i < buttonsBase.length; i++) {
                 buttonsUserBase.add(buttonsBase[i], i,0);
             }
-
-
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
+        }
+        switch(userlvl)
+        {
+            case 1:
+                buttonsUserBase.setHgap(200);
+                buttonsUserBase.setVgap(55);
+                break;
+            case 2:
+                buttonsUserBase.setHgap(110);
+                buttonsUserBase.setVgap(55);
+                break;
+            case 3:
+                buttonsUserBase.setHgap(100);
+                buttonsUserBase.setVgap(55);
+                break;
+
         }
         return buttonsUserBase;
     }
@@ -472,7 +573,6 @@ public class Vista extends Application {
         }
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
-
     }
     private void metodoLanzarPanelBase(String user) {
             autentication = ctrler.Aceptar(userTxtf.getText(),pwdTxtf.getText()); // comprobar el usuario y la contraseña introducidos
@@ -487,7 +587,6 @@ public class Vista extends Application {
             }
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
-
     }
 
     // POP UPS
@@ -504,9 +603,16 @@ public class Vista extends Application {
         alert.setTitle("Warning Dialog");
         alert.setHeaderText("Look, a Warning Dialog");
         alert.setContentText("Careful with the next step!");
-
         alert.showAndWait();
-
+    }
+    private void popUpAlerta(String info){
+        // WARNING MESSAGE
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning Dialog");
+        alert.setHeaderText("Look, a Warning Dialog");
+        alert.setContentText(info);
+        alert.setHeight(500);
+        alert.showAndWait();
     }
 
 
@@ -528,13 +634,11 @@ public class Vista extends Application {
             initializeArrays();
             generateMenuItems();
             // inicializar objetos
-
             loginTPV = new Stage();
             loginTPV = primaryStage;
             loginTPV.setResizable(false);
             base = new StackPane();
             base.setPadding(new Insets(100));
-
             generarLogin();
             base.getChildren().add(login);
             root = new Scene(base,400,200);
@@ -542,7 +646,7 @@ public class Vista extends Application {
             loginTPV.setScene(root);
             loginTPV.show();
         }catch (Exception e) {
-
+            System.out.println("Ha fallado la inicializaci�n del login, first start metod failed");
         }
     }
 
@@ -554,23 +658,17 @@ public class Vista extends Application {
     //Codigo Vicent
     
     private void administraUsersView() {
-    	
-    	
     	userLabel = new Label("Usuario");
         passLabel = new Label("Contraseña");
         permisoLabel = new Label("Permisos");
-        
         userField = new TextField();
         userField.setPromptText("Nombre o correo electronico");
-        passField = new TextField();
+        passField = new PasswordField();
         passField.setPromptText("Contraseña");
-        
         //ListView<String> lvl = new ListView<>();
         ObservableList<String> permis = FXCollections.observableArrayList();
         permis.addAll("1", "2", "3");
    	 	ComboBox<String> cbx = new ComboBox<>(permis);
-   	 	
-   	 	
         crearUser = new Button("Crear");
         crearUser.setOnAction((e) -> {
         	Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -579,14 +677,12 @@ public class Vista extends Application {
             alert.setContentText("El usuario se ha a�adido correctamente");
             alert.showAndWait();
         });
-        
         volver2 = new Button("Atrás");
         volver2.setOnAction((e) -> {
             buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
             initArrayButtons(this.userlvl);
             gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
         });
-        
         buttonsUserBase.add(userLabel,0,0);
         buttonsUserBase.add(userField,1,0);
         buttonsUserBase.add(passLabel,0,1);
@@ -595,15 +691,6 @@ public class Vista extends Application {
         buttonsUserBase.add(cbx, 1, 2);
         buttonsUserBase.add(crearUser, 0, 3);
         buttonsUserBase.add(volver2, 1, 3);
-    	
     }
-    /*
-     * 
-     ObservableList<String> items = FXCollections.observableArrayList();
-	 items.addAll("item-1", "item-2", "item-3", "item-4", "item-5");
-	 ComboBox<String> cbx = new ComboBox<>(items);
-     * 
-     * */
-    
     //Fin Codigo Vicent
 }
