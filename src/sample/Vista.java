@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -21,13 +22,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+//import javax.mail.*;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeMessage;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Properties;
 
 
 public class Vista extends Application {
@@ -64,12 +67,16 @@ public class Vista extends Application {
 
 
     // etiquetas
-    private Label userLbl, pwdLbl, userLabel, passLabel, permisoLabel;
+    private Label userLbl_name, pwdLbl, userLabel, passLabel, permisoLabel;
+    private Label user_dni, user_ap1, user_ap2, user_address, user_nss, user_afSind, user_tlf_emp, user_mail, user_pob, user_birth, user_cp;
     private Label marca;
     private Label talla;
 
     // campos de texto
     private TextField userTxtf;
+    // creacion usuarios
+    private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
+    // creacion usuarios
     private TextField filtro;
     private TextField marcaTF;
     private TextField tallaTF;
@@ -119,7 +126,7 @@ public class Vista extends Application {
 
         local = new Button("Genero En Tienda");
         externo = new Button("Pedido Almacen");
-        volver = new Button("AtrÃ¡s");
+        volver = new Button("Back");
         local.setPrefSize(150, 150);
         externo.setPrefSize(150, 150);
         local.setOnAction((e) -> {
@@ -403,14 +410,14 @@ public class Vista extends Application {
         form.setHgap(10);
         form.setVgap(10);
 
-        userLbl = new Label("Usuario");
+        userLbl_name = new Label("Usuario");
         pwdLbl = new Label("Contraseña");
         userTxtf = new TextField();
         userTxtf.setPromptText("Nombre o correo electronico");
         pwdTxtf = new PasswordField();
         pwdTxtf.setPromptText("Contraseña");
 
-        form.add(userLbl, 0, 0);
+        form.add(userLbl_name, 0, 0);
         form.add(userTxtf, 1, 0);
         form.add(pwdLbl, 0, 1);
         form.add(pwdTxtf, 1, 1);
@@ -423,6 +430,7 @@ public class Vista extends Application {
                 metodoLanzarPanelBase(userTxtf.getText());
             } catch (Exception ex) {
                 System.err.println("siguiente panel por boton ha fallado");
+                ex.printStackTrace();
             }
             ctrler.mensaje();
         });
@@ -449,7 +457,8 @@ public class Vista extends Application {
         stackBase.setMaxWidth(screenWidth);
         // se buscara el nombre del usuario en la base de datos, en la tabla el tipo de permiso
         // comprobacion de permiso
-        int permiso = ctrler.checkPermision(user);
+        //int permiso = ctrler.checkPermision(user);
+        int permiso = 3;
         stackBase.getChildren().add(bpBaseTpv);
         bpBaseTpv.setStyle("-fx-background-color: #486187");
         gridButtonsContainer.setAlignment(Pos.CENTER);
@@ -578,13 +587,13 @@ public class Vista extends Application {
         return buttonsUserBase;
     }
 
-    // control de paneles
+    // control de paneles pulsando enter
     private void metodoLanzarPanelBase(String user, KeyEvent e) throws SQLException {
         if (e.getCode().equals(KeyCode.ENTER)) {
             System.out.println("Has pulsado Enter");
-            autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
-            enter = ctrler.autenticar(autentication);
-            if (enter) {
+            //autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
+            enter = ctrler.autenticar(true); // autentication
+            if (enter) { //enter
                 loginTPV.close();
                 this.panelBase(user);
             } else {
@@ -596,10 +605,10 @@ public class Vista extends Application {
         // comprobacion de usuario
         // recoge el tipo de usuario admin 1 supervisor 2 y dependiente 3
     }
-
+    // sin pulsar enter
     private void metodoLanzarPanelBase(String user) throws SQLException {
-        autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
-        enter = ctrler.autenticar(autentication);
+        //autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
+        enter = ctrler.autenticar(true); //autentication
         if (enter) {
             loginTPV.close();
             this.panelBase(user);
@@ -672,28 +681,28 @@ public class Vista extends Application {
 		props.put("mail.smtp.port", "465");
                 *
                 * */
-                Properties properties = System.getProperties();
-                properties.put("smtp.gmail.com", "aaronlopezlopez2@gmail.com");
-                properties.put("smtp.gmail.com","465");
-                properties.put("mail.smtp.socketFactory.class",
-                        "javax.net.ssl.SSLSocketFactory");
-                Session session = Session.getDefaultInstance(properties,
-                        new javax.mail.Authenticator() {
-                            protected PasswordAuthentication getPasswordAuthentication() {
-                                return new PasswordAuthentication("aaronlopezlopez2@gmail.com","TumDdujMCeyW4RD");
-                            }
-                        });
-                try {
-                    MimeMessage message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress("aaronlopezlopez2@gmail.com"));
-                    message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("aaronlopezlopez2@gmail.com"));
-                    message.setSubject(titleTF.getText());
-                    message.setText(contextTA.getText());
-                    Transport.send(message);
-                    System.out.println("message sent successfully....");
-                } catch (MessagingException ex) {
-                    System.err.println("ERROR AL ENVIAR");
-                }
+               // Properties properties = System.getProperties();
+               // properties.put("smtp.gmail.com", "aaronlopezlopez2@gmail.com");
+               // properties.put("smtp.gmail.com","465");
+               // properties.put("mail.smtp.socketFactory.class",
+               //         "javax.net.ssl.SSLSocketFactory");
+                //Session session = Session.getDefaultInstance(properties,
+                //        new javax.mail.Authenticator() {
+                //            protected PasswordAuthentication getPasswordAuthentication() {
+                //                return new PasswordAuthentication("aaronlopezlopez2@gmail.com","TumDdujMCeyW4RD");
+                //            }
+                //        });
+                //try {
+                //    MimeMessage message = new MimeMessage(session);
+                //    message.setFrom(new InternetAddress("aaronlopezlopez2@gmail.com"));
+                //    message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("aaronlopezlopez2@gmail.com"));
+                //    message.setSubject(titleTF.getText());
+                //    message.setText(contextTA.getText());
+                //    Transport.send(message);
+                //    System.out.println("message sent successfully....");
+                //} catch (MessagingException ex) {
+                //    System.err.println("ERROR AL ENVIAR");
+                //}
             }
         });
 
@@ -779,16 +788,53 @@ public class Vista extends Application {
 
 
     private void administraUsersView() {
-        userLabel = new Label("Usuario");
-        passLabel = new Label("Contraseña");
+        //    private Label user_dni, user_ap1, user_ap2, user_address, user_nss, user_afSind, user_tlf_emp, user_mail, user_pob, user_birth, user_cp;
+        //     private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
+        userLabel = new Label("Nombre");//
+        user_dni = new Label("Dni");
+        user_ap1 = new Label("Primer Apellido");
+        user_ap2 = new Label("Segundo Apellido");
+        user_address = new Label("Direccion");
+        user_nss = new Label("NUSS");
+        user_afSind = new Label("Numero Afiliado Sindicato");
+        user_tlf_emp = new Label("Numero telefono Empresa");
+        user_mail = new Label("Correo Elecronico");
+        user_pob = new Label("Población");
+        user_birth = new Label("Fecha Nacimiento");
+        user_cp = new Label("Codigo Postal");
         permisoLabel = new Label("Permisos");
-        userField = new TextField();
-        userField.setPromptText("Nombre o correo electronico");
-        passField = new PasswordField();
-        passField.setPromptText("Contraseña");
+
+        dni_txt = new TextField();
+        dni_txt.setPromptText("Dni");
+        name_txt = new TextField();
+        name_txt.setPromptText("Nombre");
+        ap1_txt = new TextField();
+        ap1_txt.setPromptText("Primer Apellido");
+        ap2_txt = new TextField();
+        ap2_txt.setPromptText("Segundo Apellido");
+        adss_txt = new TextField();
+        adss_txt.setPromptText("Direccion");
+        nss_txt = new TextField();
+        nss_txt.setPromptText("Numero SS");
+        nafSind_txt = new TextField();
+        nafSind_txt.setPromptText("Num. Afiliado Sindicato");
+        ntlf_txt = new TextField();
+        ntlf_txt.setPromptText("Num. Tlf. Empresa");
+        email_txt = new TextField();
+        email_txt.setPromptText("Email");
+        pob_txt = new TextField();
+        pob_txt.setPromptText("Poblacion");
+        dateB_txt = new TextField();
+        dateB_txt.setPromptText("Fecha Nacimiento");
+        cp_txt = new TextField();
+        cp_txt.setPromptText("Codigo Postal");
+
+
+
         ObservableList<String> permis = FXCollections.observableArrayList();
         permis.addAll("1", "2", "3");
         ComboBox<String> cbx = new ComboBox<>(permis);
+        cbx.getSelectionModel().selectFirst(); // valor predeterminado
         crearUser = new Button("Crear");
         crearUser.setOnAction((e) -> {
             try {
@@ -800,12 +846,17 @@ public class Vista extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Usuario creado");
             alert.setHeaderText(null);
-            alert.setContentText("El usuario se ha añadido correctamente");
+            alert.setContentText("El usuario se ha creado correctamente");
             alert.showAndWait();
         });
         volver2 = new Button("Atras");
         volver2.setOnAction((e) -> {
             buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
+            // Node[] obj = {userTxtf};//buttonsUserBase.getChildren().toArray();
+            // ArrayList<Node> obj_list = new ArrayList();
+            // obj_list.add(obj[0]);
+            // buttonsUserBase.getChildren().removeAll(obj_list);
+            //buttonsUserBase.getChildren().removeAll() remove collection, guardar en una collección
             initArrayButtons(this.userlvl);
             gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
         });

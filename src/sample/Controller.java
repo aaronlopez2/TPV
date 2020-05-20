@@ -12,7 +12,7 @@ public class Controller {
 
 
     public void mensaje(){
-        System.out.println("PRUEBA");
+        System.out.println("mensaje desde controlador ctrler.mensaje");
     }
 
 
@@ -28,22 +28,22 @@ public class Controller {
     public void createUser(String name, String pwd, int permisos) throws SQLException {
        //int pwdh = pwd.hashCode();
        //pwd = String.valueOf(pwdh);
-        user = new Users(name,pwd,permisos);
-        model.crearUsuario(user);
+        //user = new Users(name,pwd,permisos);
+        //model.crearUsuario(user);
 
     }
 
-    public boolean checkUser(String name, String pwd) throws SQLException {
-        user = new Users(name, pwd);
+  /*  public boolean checkUser(String name, String pwd) throws SQLException {
+       user = new Users(name, pwd);
         boolean exist = model.autenticar(user);
-        if(exist) {
+       if(exist) {
             return true;
         } else {
             return false;
         }
-    }
+    }*/
 
-    public int checkPermision(String name) throws SQLException {
+   /* public int checkPermision(String name) throws SQLException {
         String log = model.permision(name);
         if(log.equals("404")) {
             return 0;
@@ -55,6 +55,6 @@ public class Controller {
             return 1;
         }
         return 0;
-    }
+    }*/
 
 }
