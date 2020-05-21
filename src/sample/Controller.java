@@ -1,14 +1,17 @@
 package sample;
 
 
+import dbo.Empleados;
 import dbo.Users;
 
+import javax.xml.namespace.QName;
 import java.sql.SQLException;
 
 public class Controller {
 
     Modelo model = new Modelo();
     Users user;
+    Empleados emp;
 
 
     public void mensaje(){
@@ -25,14 +28,40 @@ public class Controller {
         }
     }
 
-    public void createUser(String name, String pwd, int permisos) throws SQLException {
-       //int pwdh = pwd.hashCode();
-       //pwd = String.valueOf(pwdh);
-        //user = new Users(name,pwd,permisos);
-        //model.crearUsuario(user);
+    public void createUser(Empleados emp, int permisos) throws SQLException {
+        String user_level = "";
+        switch (permisos) {
+            case 0:
+                user_level = "admin";
+                break;
+            case 1:
+                user_level = "Boss";
+                break;
+            case 2:
+                user_level = "User";
+                break;
+        }
+        String user_id = generateUser_ID(emp.getNombre(),emp.getApellido1(),emp.getApellido2());
+        System.out.println("Permisos usuarios: "+user_level);
+        model.crearUsuario(emp,user_id,user_level);
 
     }
+    public String generateUser_ID(String name, String ap1, String ap2) {
+        char[] letras = new char[6];
+        char[] names = name.toCharArray();
+        char[] ap1s = ap1.toCharArray();
+        char[] ap2s = ap2.toCharArray();
+        String user_id = "";
+        for (int i = 0; i < letras.length; i++) {
+            if(i < 2) letras[i] = names[i];
+            if(i >= 2 && i < 4) letras[i] = ap1s[i-2];
+            if(i >= 4) letras[i] = ap2s[i-4];
+            user_id = user_id + letras[i];
+        }
 
+        System.out.println(user_id);
+        return user_id;
+    }
   /*  public boolean checkUser(String name, String pwd) throws SQLException {
        user = new Users(name, pwd);
         boolean exist = model.autenticar(user);

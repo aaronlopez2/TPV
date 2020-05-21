@@ -12,6 +12,21 @@ public class Empleados {
         this.dni = dni;
         this.nombre = nombre;
     }
+    public Empleados(String dni, String nombre, String apellido1, String apellido2) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.direccion = "dire";
+        this.num_SS = "999";
+        this.num_Af_Sindicato = "999";
+        this.num_telf_emp = "654654654";
+        this.num_telf_priv = "654654564";
+        this.email = "email@falso.com";
+        this.cp = "46950";
+        Long date = Long.valueOf(999999999);
+        this.fechaNacimiento = new Date(date);
+    }
 
     public Empleados(int emp_Id, String dni, String nombre, String apellido1, String apellido2, String direccion, String num_SS, String num_Af_Sindicato, String num_telf_emp, String num_telf_priv, String email, String cp, Date fechaNacimiento) {
         this.emp_Id = emp_Id;

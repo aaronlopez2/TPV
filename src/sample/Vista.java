@@ -1,5 +1,6 @@
 package sample;
 
+import dbo.Empleados;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -790,6 +791,7 @@ public class Vista extends Application {
     private void administraUsersView() {
         //    private Label user_dni, user_ap1, user_ap2, user_address, user_nss, user_afSind, user_tlf_emp, user_mail, user_pob, user_birth, user_cp;
         //     private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
+
         userLabel = new Label("Nombre");//
         user_dni = new Label("Dni");
         user_ap1 = new Label("Primer Apellido");
@@ -799,7 +801,7 @@ public class Vista extends Application {
         user_afSind = new Label("Numero Afiliado Sindicato");
         user_tlf_emp = new Label("Numero telefono Empresa");
         user_mail = new Label("Correo Elecronico");
-        user_pob = new Label("Población");
+        user_pob = new Label("Poblacion");
         user_birth = new Label("Fecha Nacimiento");
         user_cp = new Label("Codigo Postal");
         permisoLabel = new Label("Permisos");
@@ -829,18 +831,55 @@ public class Vista extends Application {
         cp_txt = new TextField();
         cp_txt.setPromptText("Codigo Postal");
 
-
+        Node[] objLbl = {userLabel,user_dni,user_ap1,user_ap2,user_address,user_nss,user_afSind,user_tlf_emp,user_mail,user_pob,user_birth,user_cp,permisoLabel};
+        Node[] objTxt = {name_txt,dni_txt, ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt};
 
         ObservableList<String> permis = FXCollections.observableArrayList();
         permis.addAll("1", "2", "3");
         ComboBox<String> cbx = new ComboBox<>(permis);
         cbx.getSelectionModel().selectFirst(); // valor predeterminado
         crearUser = new Button("Crear");
+
+
+        volver2 = new Button("Atras");
+        // (0,x) (1,y)
+        for (int x = 0; x < objLbl.length; x++){
+            buttonsUserBase.add(objLbl[x],0,x);
+        }
+        for(int y = 0; y < objTxt.length; y++) {
+            buttonsUserBase.add(objTxt[y],1,y);
+        }
+
+        buttonsUserBase.add(cbx, 1, objTxt.length);
+        buttonsUserBase.add(crearUser, 0, objTxt.length+2);
+        buttonsUserBase.add(volver2, 1, objTxt.length+2);
+        buttonsUserBase.setVgap(10);
+
+        volver2.setOnAction((e) -> {
+            // buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
+
+            ArrayList<Node> obj_list = new ArrayList();
+            ArrayList<Node> obj_list2 = new ArrayList();
+            for (int i = 0; i < objLbl.length; i++) {
+                obj_list.add(objLbl[i]);
+            }
+            for (int i = 0; i < objTxt.length; i++) {
+                obj_list2.add(objTxt[i]);
+            }
+
+            buttonsUserBase.getChildren().removeAll(obj_list);
+            buttonsUserBase.getChildren().removeAll(obj_list2);
+            buttonsUserBase.getChildren().removeAll(cbx,crearUser,volver2);
+            initArrayButtons(this.userlvl);
+            gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
+        });
         crearUser.setOnAction((e) -> {
             try {
+                Empleados emp1 = new Empleados(dni_txt.getText(),name_txt.getText(),ap1_txt.getText(),ap2_txt.getText());
                 int p = cbx.getSelectionModel().getSelectedIndex();
-                ctrler.createUser(userField.getText(),passField.getText(), p);
-            } catch (SQLException ex) {
+                System.out.println("permisos seleccionado "+p);
+                ctrler.createUser(emp1,p);
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -849,25 +888,7 @@ public class Vista extends Application {
             alert.setContentText("El usuario se ha creado correctamente");
             alert.showAndWait();
         });
-        volver2 = new Button("Atras");
-        volver2.setOnAction((e) -> {
-            buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
-            // Node[] obj = {userTxtf};//buttonsUserBase.getChildren().toArray();
-            // ArrayList<Node> obj_list = new ArrayList();
-            // obj_list.add(obj[0]);
-            // buttonsUserBase.getChildren().removeAll(obj_list);
-            //buttonsUserBase.getChildren().removeAll() remove collection, guardar en una collección
-            initArrayButtons(this.userlvl);
-            gridButtonsContainer.getChildren().add(generarBotonesBase(this.userlvl));
-        });
-        buttonsUserBase.add(userLabel, 0, 0);
-        buttonsUserBase.add(userField, 1, 0);
-        buttonsUserBase.add(passLabel, 0, 1);
-        buttonsUserBase.add(passField, 1, 1);
-        buttonsUserBase.add(permisoLabel, 0, 2);
-        buttonsUserBase.add(cbx, 1, 2);
-        buttonsUserBase.add(crearUser, 0, 3);
-        buttonsUserBase.add(volver2, 1, 3);
+
     }
 
 }
