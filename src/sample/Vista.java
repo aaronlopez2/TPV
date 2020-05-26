@@ -1,6 +1,7 @@
 package sample;
 
 import dbo.Empleados;
+import dbo.Users;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -152,6 +153,10 @@ public class Vista extends Application {
 
         });
         volver.setOnAction((e) -> {
+            if (visibleLeft) {
+                bpBaseTpv.setLeft(null);
+                visibleLeft = false;
+            }
             if (bpBaseTpv.getRight() == null) {
 
             } else {
@@ -412,11 +417,11 @@ public class Vista extends Application {
         form.setVgap(10);
 
         userLbl_name = new Label("Usuario");
-        pwdLbl = new Label("Contraseña");
+        pwdLbl = new Label("Password");
         userTxtf = new TextField();
         userTxtf.setPromptText("Nombre o correo electronico");
         pwdTxtf = new PasswordField();
-        pwdTxtf.setPromptText("Contraseña");
+        pwdTxtf.setPromptText("Password");
 
         form.add(userLbl_name, 0, 0);
         form.add(userTxtf, 1, 0);
@@ -428,7 +433,20 @@ public class Vista extends Application {
         submit = new Button("Aceptar");
         submit.setOnAction((e) -> {
             try {
-                metodoLanzarPanelBase(userTxtf.getText());
+                if(userTxtf.getText().equals("") && pwdTxtf.getText().equals("")) {
+                    popUpAlerta("Introduzca usuario y password");
+                } else {
+                    if(userTxtf.getText().equals("")) {
+                        popUpAlerta("Introduzca usuario");
+                    }
+                    if(pwdTxtf.getText().equals("")) {
+                        popUpAlerta("Introduzca password");
+                    } else {
+                        metodoLanzarPanelBase(userTxtf.getText());
+                    }
+                }
+
+
             } catch (Exception ex) {
                 System.err.println("siguiente panel por boton ha fallado");
                 ex.printStackTrace();
@@ -448,7 +466,8 @@ public class Vista extends Application {
         login.setLeft(form);
     }
 
-    private void generarPanelBase(String user) throws SQLException {
+    private boolean generarPanelBase(String user) throws Exception {
+
         bpBaseTpv = new BorderPane();
         gridButtonsContainer = new StackPane();
         baseTPV = new Stage();
@@ -456,10 +475,10 @@ public class Vista extends Application {
         stackBase.setStyle("-fx-background-color: #8DAA91");
         stackBase.setMaxHeight(screenHeight);
         stackBase.setMaxWidth(screenWidth);
-        // se buscara el nombre del usuario en la base de datos, en la tabla el tipo de permiso
+        // se busca el nombre del usuario en la base de datos, en la tabla el tipo de permiso
         // comprobacion de permiso
-        //int permiso = ctrler.checkPermision(user);
-        int permiso = 3;
+        int permiso = ctrler.checkPermision(user);
+        //int permiso = 3;
         stackBase.getChildren().add(bpBaseTpv);
         bpBaseTpv.setStyle("-fx-background-color: #486187");
         gridButtonsContainer.setAlignment(Pos.CENTER);
@@ -471,19 +490,19 @@ public class Vista extends Application {
         bpBaseTpv.setBottom(new Label("PRUEBA DE ETIQUETA Y ESPACIO AVISO LEGAL"));
         switch (permiso) {
             case 0:
-                errorPWD("ERROR 404 no se encuentra usuario en la bbdd");
-                System.err.println("ERROR 404 No se encuentra usuario en la BBDD");
+                errorPWD("El usuario no tiene permisos");
+                System.out.println(user+ " no tiene permisos");
                 break;
             case 1:// permiso == 1 para el dependiente
                 bpBaseTpv.setTop(barraHerramientasPanelBase());
                 try {
                     gridButtonsContainer.getChildren().add(generarBotonesBase(permiso));
                 } catch (Exception ex) {
-                    System.out.println("Error al añadir el grid pane al stack pane gridbuttonscontainer");
+                    System.out.println("Error al anadir el grid pane al stack pane gridbuttonscontainer");
                 }
                 buttonsUserBase.setHgap(200);
                 buttonsUserBase.setVgap(55);
-                break;
+                return true;
             case 2:// permiso == 2 para el supervisor
 
                 System.out.println("permisos de nivel 2");
@@ -495,10 +514,11 @@ public class Vista extends Application {
                 }
                 buttonsUserBase.setHgap(100);
                 buttonsUserBase.setVgap(55);
-                break;
+
+                return true;
+
             case 3:// permiso == 3 para el administrador del sistema
                 System.out.println("permisos de nivel 3");
-
                 bpBaseTpv.setTop(barraHerramientasPanelBase());
                 try {
 
@@ -506,25 +526,36 @@ public class Vista extends Application {
                 } catch (Exception ex) {
                     System.out.println("Error al anadir el grid pane al stack pane gridbuttonscontainer");
                 }
-
-                break;
-            case -1:// permiso == -1 si hay un fallo en la BBDD
-                System.err.println("ERROR 404 No se encuentra la BBDD");
-                break;
+                return true;
+            case -1:// permiso == -1 si no tiene permisos en la BBDD
+                errorPWD("ERROR 404 No se encuentra en la BBDD");
+                System.err.println("ERROR 404 No se encuentra en la BBDD");
+                return false;
             default:
-                System.out.println("No tiene permisos");
+
+                return false;
         }
+        return false;
     }
 
     private void panelBase(String user) {
         // cuando boton pasa aceptar hace esto
+        boolean genPan = false;
         try {
-            generarPanelBase(user);
-            rootTPV = new Scene(stackBase, 1200, 800);
-            baseTPV.setScene(rootTPV);
-            baseTPV.setMaximized(true);
-            baseTPV.setResizable(false);
-            baseTPV.show();
+
+            genPan = generarPanelBase(user);
+            if(genPan == true) {
+                System.out.println("Fuera del bucle");
+                rootTPV = new Scene(stackBase, 1200, 800);
+                baseTPV.setScene(rootTPV);
+                baseTPV.setMaximized(true);
+                baseTPV.setResizable(false);
+                baseTPV.show();
+            } else {
+                loginTPV.show();
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -592,14 +623,17 @@ public class Vista extends Application {
     private void metodoLanzarPanelBase(String user, KeyEvent e) throws SQLException {
         if (e.getCode().equals(KeyCode.ENTER)) {
             System.out.println("Has pulsado Enter");
-            //autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
-            enter = ctrler.autenticar(true); // autentication
+            autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la pwd introducidos
+            enter = ctrler.autenticar(autentication); // autentication
             if (enter) { //enter
                 loginTPV.close();
                 this.panelBase(user);
             } else {
-                // no ha entrado, mensaje de fallo de autenticaciÃ³n
-                errorPWD();
+                // no ha entrado, mensaje de fallo de autenticacion
+                int error = ctrler.checkPermision(user);
+                System.out.println(error + "USUARIO NO EXISTE");
+                if (error == -1) { errorPWD("ERROR 404 No se encuentra en la BBDD"); }
+                if (error == 0)  { errorPWD(); }
                 System.out.println("FALLO");
             }
         }
@@ -608,14 +642,16 @@ public class Vista extends Application {
     }
     // sin pulsar enter
     private void metodoLanzarPanelBase(String user) throws SQLException {
-        //autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la contraseÃ±a introducidos
-        enter = ctrler.autenticar(true); //autentication
+        autentication = ctrler.checkUser(userTxtf.getText(), pwdTxtf.getText()); // comprobar el usuario y la pwd introducidos
+        enter = ctrler.autenticar(autentication); //autentication
         if (enter) {
             loginTPV.close();
             this.panelBase(user);
         } else {
-            // no ha entrado, mensaje de fallo de autenticaciÃ³n
-            errorPWD("error 404 usuario no encontrado");
+            int error = ctrler.checkPermision(user);
+            System.out.println(error + " ------          USUARIO NO EXISTE");
+            if (error == -1) { errorPWD("ERROR 404 No se encuentra en la BBDD"); }
+            if (error == 0)  { errorPWD(); }
             System.out.println("FALLO");
         }
         // comprobacion de usuario
@@ -625,9 +661,16 @@ public class Vista extends Application {
     // POP UPS
     private void errorPWD() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Contraseña incorrecta");
+        alert.setTitle("Clave incorrecta");
         alert.setHeaderText(null);
-        alert.setContentText("La contraseña que has introducido no es valida");
+        alert.setContentText("La clave que has introducido no es valida");
+        alert.showAndWait();
+    }
+    public static void errorPWDs() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Clave incorrecta");
+        alert.setHeaderText(null);
+        alert.setContentText("La clave que has introducido no es valida");
         alert.showAndWait();
     }
     private void errorPWD(String txt) {
@@ -733,10 +776,10 @@ public class Vista extends Application {
     private void popUpAlerta(String info) {
         // WARNING MESSAGE
         alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning Dialog");
-        alert.setHeaderText("Look, a Warning Dialog");
+        alert.setTitle("Cuidado");
+        //alert.setHeaderText("Look, a Warning Dialog");
         alert.setContentText(info);
-        alert.setHeight(500);
+        alert.setHeight(200);
         alert.showAndWait();
     }
 

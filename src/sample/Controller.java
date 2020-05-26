@@ -62,28 +62,30 @@ public class Controller {
         System.out.println(user_id);
         return user_id;
     }
-  /*  public boolean checkUser(String name, String pwd) throws SQLException {
-       user = new Users(name, pwd);
+
+    public boolean checkUser(String name, String pwd) throws SQLException {
+        user = new Users(name, pwd);
         boolean exist = model.autenticar(user);
-       if(exist) {
+        System.out.println(exist+ " valor autenticacion --- controller.CheckUser");
+        if(exist) {
             return true;
         } else {
             return false;
         }
-    }*/
+    }
 
-   /* public int checkPermision(String name) throws SQLException {
+    public int checkPermision(String name) throws SQLException {
         String log = model.permision(name);
         if(log.equals("404")) {
-            return 0;
-        } else if(log.equals("Admin")){
+            return -1;
+        } else if(log.equalsIgnoreCase("Admin")){
             return 3;
-        } else if(log.equals("Boss")){
+        } else if(log.equalsIgnoreCase("Boss")){
             return 2;
-        } else if(log.equals("User")){
+        } else if(log.equalsIgnoreCase("User")){
             return 1;
         }
         return 0;
-    }*/
+    }
 
 }

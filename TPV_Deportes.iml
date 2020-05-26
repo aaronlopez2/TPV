@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="mysql-connector-java-8.0.18" level="project" />
     <orderEntry type="library" exported="" name="hibernate-core-5.4.6.Final" level="project" />
+    <orderEntry type="library" name="javax.mail" level="project" />
   </component>
 </module>

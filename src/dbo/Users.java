@@ -11,6 +11,14 @@ public class Users {
         this.emp_id = emp_id;
     }
 
+    public Users(String id_User, String user_pwd) {
+        this.id_User = id_User;
+        this.user_pwd = user_pwd;
+    }
+
+    public Users(String id_User) {
+        this.id_User = id_User;
+    }
 
     public String getId_User() {
         return id_User;
