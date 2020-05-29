@@ -1,6 +1,8 @@
 package sample;
 
 
+import dbo.Almacen;
+import dbo.Articulos;
 import dbo.Empleados;
 import dbo.Users;
 
@@ -86,6 +88,28 @@ public class Controller {
             return 1;
         }
         return 0;
+    }
+    public Articulos[] getArticulos() throws SQLException{
+        // go to model devuelve un array de objetos articulos
+        if(model.getArticulos() == null) {
+            return null;
+        } else {
+            Articulos[] arts = model.getArticulos();
+            return arts;
+        }
+    }
+    public Almacen[] getAlmacen() throws SQLException{
+        // go to model devuelve un array de objetos articulos
+        if(model.getArticulos() == null) {
+            return null;
+        } else {
+            Almacen[] almc = model.getAlmacen();
+            return almc;
+        }
+    }
+
+    public void generarExcel(String[] excel){
+
     }
 
 }

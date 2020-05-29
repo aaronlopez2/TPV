@@ -1,7 +1,7 @@
 package sample;
 
+import dbo.Articulos;
 import dbo.Empleados;
-import dbo.Users;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,8 +30,6 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -79,7 +77,7 @@ public class Vista extends Application {
     // creacion usuarios
     private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
     // creacion usuarios
-    private TextField filtro;
+    private TextField nombreProductoTf;
     private TextField marcaTF;
     private TextField tallaTF;
 
@@ -97,27 +95,39 @@ public class Vista extends Application {
     String[] buttonsNam;
 
     private void initializeArrays() {
-        int length = 50; // este variarÃ¡ despues de conectarse con la bbdd
-        buttonsNam = new String[]{"Almacen", "Ventas", "Documentos", "Mantenimiento", "Informes", "Adm. usuarios"};
-        listadoPedidos = new String[length];
-        for (int i = 0; i < length; i++) {
-            listadoPedidos[i] = "Este texto es de prueba " + 0 + 0 + i;
-        }
+        buttonsNam = new String[]{"Almacen", "Ventas", "Documentos", "Mantenimiento", "Adm. usuarios"};
     }
 
     // generate objects
-    private void generatePanelDer() {
+    private void generatePanelDer() throws SQLException {
         ListView<String> list = new ListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
-        list.setItems(items);
-        list.prefWidth(500);
-        listContainer = new VBox();
-        listContainer.setStyle("-fx-background-color: #003322");
-        //listContainer.setPrefHeight(getButtonsUserBase().getHeight());
-        //listContainer.setMaxHeight(getButtonsUserBase().getHeight());
-        listContainer.getChildren().add(list);
-        //VBox.setVgrow(listContainer, Priority.ALWAYS);
+        // go to controller
+        Articulos[] arts = null;
+        if(ctrler.getArticulos() == null) {
+            errorPWD("No se han encontrado articulos");
+        } else {
+            arts = ctrler.getArticulos();
+            listadoPedidos = new String[arts.length];
+            for (int i = 0; i < listadoPedidos.length; i++) {
+                listadoPedidos[i] = arts[i].getMarca() +"-"+ arts[i].getModelo()+" Id: "+ arts[i].getIdArticulo() + " | Precio: " +arts[i].getCoste() + " - Cantidad: "+arts[i].getCantidad();
 
+            }
+        }
+        ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
+        listContainer = new VBox();
+        list.setItems(items);
+        list.setPrefHeight(0);
+        list.prefHeightProperty().bind(listContainer.heightProperty());
+        list.setOnMouseClicked(e -> {
+            if(e.getClickCount() == 2) {
+                System.out.println("DOBLE CLICK EN UN ELEMENTO DE LA LISTA");;
+            }
+
+        });
+        VBox.setVgrow(listContainer,Priority.ALWAYS);
+        listContainer.setPrefWidth(400);
+        listContainer.setStyle("-fx-background-color: #EAD7D7");
+        listContainer.getChildren().add(list);
         bpBaseTpv.setRight(listContainer);
         list.prefHeight(1100);
     }
@@ -132,7 +142,12 @@ public class Vista extends Application {
         local.setPrefSize(150, 150);
         externo.setPrefSize(150, 150);
         local.setOnAction((e) -> {
-            generatePaneLateralIzq();
+            try {
+                generatePaneLateralIzq();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.out.println("ERROR AL GENERAR PANEL IZQUIERDO");
+            }
             if (visibleLeft) {
                 bpBaseTpv.setLeft(null);
                 visibleLeft = false;
@@ -143,7 +158,12 @@ public class Vista extends Application {
         });
         externo.setOnAction((e) -> {
 
-            generatePanelDer();
+            try {
+                generatePanelDer();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.out.println("ERROR AL GENERAR PANEL DERECHO");
+            }
             if (visibleRight) {
                 bpBaseTpv.setRight(null);
                 visibleRight = false;
@@ -206,7 +226,7 @@ public class Vista extends Application {
                 System.out.println(buttonsBase.length);
                 break;
             case 2:
-                buttonsBase = new Button[5];
+                buttonsBase = new Button[4];
                 for (int i = 0; i < buttonsBase.length; i++) {
                     Button bot = new Button();
                     bot.setPrefSize(150, 150);
@@ -217,7 +237,7 @@ public class Vista extends Application {
                 System.out.println(buttonsBase.length);
                 break;
             case 3:
-                buttonsBase = new Button[6];
+                buttonsBase = new Button[5];
                 for (int i = 0; i < buttonsBase.length; i++) {
                     Button bot = new Button();
                     bot.setPrefSize(150, 150);
@@ -242,7 +262,11 @@ public class Vista extends Application {
                 generateVentasPane();
             });  // VENTAS
             buttonsBase[2].setOnAction(e -> { // DOCUMENTOS --- LISTADOS
-                generatePaneLateralIzq();
+                try {
+                    generatePaneLateralIzq();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
                 if (visibleLeft) {
                     bpBaseTpv.setLeft(null);
                     visibleLeft = false;
@@ -255,10 +279,7 @@ public class Vista extends Application {
                 generateEmailPanel();
 
             }); // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
-            buttonsBase[4].setOnAction(e -> { // INFORMES --- FILTROS ESTADISTICAS
-
-            }); // INFORMES --- FILTROS ESTADISTICAS
-            buttonsBase[5].setOnAction(e -> { // ADM. USUARIOS --- AÃ‘ADIR USUARIOS
+            buttonsBase[4].setOnAction(e -> { // ADM. USUARIOS --- AÃ‘ADIR USUARIOS
 
                 buttonsUserBase.getChildren().removeAll(buttonsBase);
                 administraUsersView();
@@ -270,15 +291,19 @@ public class Vista extends Application {
     }
 
     private Button volver3, filterButonVentasPane, cleanFilters, pagoButton;
-    private Label modelo, prodNombre;
-    private TextField modeloTF;
+    private Label modelo, prodNombre,idProducto;
+    private TextField modeloTF,idProductoTf;
 
     private void generateVentasPane() {
+        buttonsUserBase.setVgap(20);
+        buttonsUserBase.setHgap(40);
+        idProducto = new Label("ID Product:");
+        idProductoTf = new TextField();
         volver3 = new Button("Atras");
         pagoButton = new Button("Pago");
         filterButonVentasPane = new Button("Filtrar");
         cleanFilters = new Button("Limpiar filtros");
-        filtro = new TextField();
+        nombreProductoTf = new TextField();
         marcaTF = new TextField();
         tallaTF = new TextField();
         prodNombre = new Label("NOMBRE");
@@ -288,13 +313,13 @@ public class Vista extends Application {
         modeloTF = new TextField();
         try {
             cleanFilters.setOnAction((e) -> {
-                filtro.setText("");
+                nombreProductoTf.setText("");
                 marcaTF.setText("");
                 modeloTF.setText("");
                 tallaTF.setText("");
             });
             volver3.setOnAction((e) -> {
-                buttonsUserBase.getChildren().removeAll(filtro, marca, tallaTF, prodNombre,
+                buttonsUserBase.getChildren().removeAll(nombreProductoTf, marca, tallaTF, prodNombre,
                         filterButonVentasPane, pagoButton,
                         marcaTF, talla, volver3, cleanFilters,
                         modelo, modeloTF);
@@ -306,9 +331,10 @@ public class Vista extends Application {
         } catch (Exception e) {
             popUpAlerta();
         }
-
+       // buttonsUserBase.add(idProducto, 0,0);
+       // buttonsUserBase.add(idProductoTf,0,0);
         buttonsUserBase.add(prodNombre, 0, 0);
-        buttonsUserBase.add(filtro, 1, 0);
+        buttonsUserBase.add(nombreProductoTf, 1, 0);
         buttonsUserBase.add(filterButonVentasPane, 2, 0);
         buttonsUserBase.add(cleanFilters, 3, 0);
         buttonsUserBase.add(marca, 0, 1);
@@ -328,70 +354,58 @@ public class Vista extends Application {
     private Label emailTo, emailTitle, emailMessage;
 
     EventHandler<ActionEvent> actionFilter = (e) -> {
-        String nombreProd = filtro.getText();
+        String idProducto = idProductoTf.getText();
+        String nombreProd = nombreProductoTf.getText();
         String prodBrand = marcaTF.getText();
         String tallaProd = tallaTF.getText();
         String modeloProd = modeloTF.getText();
 
-        if (marcaTF.getText().equals("") && tallaTF.getText().equals("") && modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n" + nombreProd + "= escrito text field");
-        } else if (!marcaTF.getText().equals("") && tallaTF.getText().equals("") && modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand \n"
-                    + nombreProd + " = escrito text field \n"
-                    + prodBrand + " = escrito text field \n"
-            );
-        } else if (!marcaTF.getText().equals("") && !tallaTF.getText().equals("") && modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand and talla = tallaProd\n"
-                    + nombreProd + " = escrito text field \n"
-                    + prodBrand + " = escrito text field \n"
-                    + tallaProd + " = talla"
-            );
-        } else if (!marcaTF.getText().equals("") && !tallaTF.getText().equals("") && !modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand and talla = tallaProd and modelo = modeloProd\n"
-                    + nombreProd + " = escrito text field \n"
-                    + prodBrand + " = escrito text field \n"
-                    + tallaProd + " = talla\n"
-                    + modeloProd + " = modelo"
-            );
-        } else if (marcaTF.getText().equals("") && !tallaTF.getText().equals("") && !modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand and talla = tallaProd and modelo = modeloProd\n"
-                    + nombreProd + " = escrito text field \n"
-                    + tallaProd + " = talla\n"
-                    + modeloProd + " = modelo"
-            );
-        } else if (!marcaTF.getText().equals("") && tallaTF.getText().equals("") && !modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand and talla = tallaProd and modelo = modeloProd\n"
-                    + nombreProd + " = escrito text field \n"
-                    + prodBrand + " = escrito text field \n"
-                    + modeloProd + " = modelo"
-            );
-        } else if (marcaTF.getText().equals("") && tallaTF.getText().equals("") && !modeloTF.getText().equals("")) {
-            popUpAlerta("select * from articulos where nombre = nombreProd \n"
-                    + "and marca = prodBrand and talla = tallaProd and modelo = modeloProd\n"
-                    + nombreProd + " = escrito text field \n"
-                    + modeloProd + " = modelo"
-            );
-        }
         // conectar con la BBDD para comprobar que hace un select * from articulos where nombre = nombreProd
     };
     EventHandler<ActionEvent> actionPago = (e) -> {
         // gestionar el articulo con la base de datos cambiar estado a vendido
+        String idProducto = idProductoTf.getText();
+        String nombreProd = nombreProductoTf.getText();
+        String prodBrand = marcaTF.getText();
+        String tallaProd = tallaTF.getText();
+        String modeloProd = modeloTF.getText();
+        // buscar en la base de datos el precio del producto y enviarlo tambien
+        int precioProd = 90;
+        String[] data = {idProducto,nombreProd,prodBrand,tallaProd,modeloProd};
         popUpConfirm("Realizando operacion");
+        ctrler.generarExcel(data);
+
     };
 
 
-    private void generatePaneLateralIzq() {
+    private void generatePaneLateralIzq() throws SQLException {
         ListView<String> list = new ListView<>();
+        // go to controller
+        Articulos[] arts = null;
+        if(ctrler.getArticulos() == null) {
+            errorPWD("No se han encontrado articulos");
+        } else {
+            arts = ctrler.getArticulos();
+            listadoPedidos = new String[arts.length];
+            for (int i = 0; i < listadoPedidos.length; i++) {
+                listadoPedidos[i] = arts[i].getMarca() +"-"+ arts[i].getModelo()+" Id: "+ arts[i].getIdArticulo() + " | Precio: " +arts[i].getCoste() + " - Cantidad: "+arts[i].getCantidad();
+
+            }
+        }
         ObservableList<String> items = FXCollections.observableArrayList(listadoPedidos);
-        list.setItems(items);
-        list.prefWidth(500);
+
         listContainer = new VBox();
-        listContainer.setStyle("-fx-background-color: #003322");
+        list.setItems(items);
+        list.setPrefHeight(0);
+        list.prefHeightProperty().bind(listContainer.heightProperty());
+        //list.maxHeight(900);
+        //list.prefWidth(380);
+        //list.prefHeight(900);
+        VBox.setVgrow(listContainer,Priority.ALWAYS);
+        listContainer.setPrefWidth(400);
+
+
+        listContainer.setStyle("-fx-background-color: #EAD7D7");
         //listContainer.setPrefHeight(getButtonsUserBase().getHeight());
         //listContainer.setMaxHeight(getButtonsUserBase().getHeight());
         listContainer.getChildren().add(list);
@@ -485,7 +499,7 @@ public class Vista extends Application {
         gridButtonsContainer.setPadding(new Insets(0, 40, 0, 40));
         //gridButtonsContainer.setMaxHeight(screenHeight);
         //gridButtonsContainer.setMaxWidth(screenWidth);
-        gridButtonsContainer.setStyle("-fx-background-color: #ffffff");
+        gridButtonsContainer.setStyle("-fx-background-color: #B49FCC");
         bpBaseTpv.setCenter(gridButtonsContainer);
         bpBaseTpv.setBottom(new Label("PRUEBA DE ETIQUETA Y ESPACIO AVISO LEGAL"));
         switch (permiso) {
@@ -616,6 +630,7 @@ public class Vista extends Application {
                 break;
 
         }
+        buttonsUserBase.setStyle("-fx-background-color: #7C72A0");
         return buttonsUserBase;
     }
 
@@ -709,12 +724,12 @@ public class Vista extends Application {
     }
 
 
-
+    MailMnt mail = new MailMnt();
     private void generateEmailPanel() {
         volver4 = new Button("Atras");
         sendEmail = new Button("Enviar");
         sendEmail.setOnAction((e) -> {
-            if (popUpConfirm()) {
+            //if (popUpConfirm()) {
                 /*
                 * Properties props = new Properties();
 		props.put("mail.smtp.host", "smtp.gmail.com");
@@ -747,7 +762,7 @@ public class Vista extends Application {
                 //} catch (MessagingException ex) {
                 //    System.err.println("ERROR AL ENVIAR");
                 //}
-            }
+                //}
         });
 
         volver4.setOnAction((e) -> {

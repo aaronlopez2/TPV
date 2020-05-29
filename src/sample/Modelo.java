@@ -1,6 +1,8 @@
 package sample;
 
 
+import dbo.Almacen;
+import dbo.Articulos;
 import dbo.Empleados;
 import dbo.Users;
 //import org.hibernate.*;
@@ -14,6 +16,7 @@ import dbo.Users;
 
 import java.io.Serializable;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Modelo {
     Connection conexion;
@@ -142,6 +145,73 @@ public class Modelo {
         }
         System.out.println("404 Modelo.permision");
         return "500";
+    }
+
+    protected Articulos[] getArticulos() throws SQLException {
+        Articulos  art;
+        Articulos[] arts;
+        ArrayList<Articulos> names = new ArrayList<Articulos>();
+        Statement s = conexion.createStatement();
+        try{
+            ResultSet rs = s.executeQuery("SELECT * FROM `tienda2`.`articulos`;");
+
+            while(rs.next())
+            {
+                System.out.println("Adding : "+ rs.getString(1)+"-"+rs.getString(2)+"-"+rs.getString(4)+"-"+rs.getString(5)+"-precio : "+rs.getFloat(3)+"- cantidad: "+rs.getInt(6));
+                art = new Articulos(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getFloat(3),rs.getInt(6)); //String idArticulo, String marca, String talla, String modelo, float coste, int cantidad
+                names.add(art);
+                System.out.println("-------------------------- FIN ITERACION --------------------------");
+            }
+            arts = new Articulos[names.size()];
+            for (int i = 0; i < arts.length; i++) {
+                arts[i] = names.get(i);
+                System.out.println("Adding2 : "+names.get(i));
+            }
+            return arts;
+        } catch(Exception excpArt) {
+            excpArt.printStackTrace();
+            System.out.println("Error en modelo.getArticulos");
+        } finally {
+            s.close();
+
+        }
+        return null;
+    }
+    protected Almacen[] getAlmacen() throws SQLException {
+        Almacen  almcn;
+        Almacen[] almc;
+        ArrayList<Almacen> names = new ArrayList<Almacen>();
+        Statement s = conexion.createStatement();
+        try{
+            ResultSet rs = s.executeQuery("SELECT * FROM `tienda2`.`Almacen`;");
+
+            while(rs.next())
+            {
+                System.out.println("Adding : "+ rs.getString(1)+"-"+rs.getString(2)+"-"+rs.getString(4)+"-"+rs.getString(5)+"-precio : "+rs.getFloat(3)+"- cantidad: "+rs.getInt(6));
+                almcn = new Almacen(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getFloat(3),rs.getInt(6)); //String idArticulo, String marca, String talla, String modelo, float coste, int cantidad
+                names.add(almcn);
+                System.out.println("-------------------------- FIN ITERACION --------------------------");
+            }
+            almc = new Almacen[names.size()];
+            for (int i = 0; i < almc.length; i++) {
+                almc[i] = names.get(i);
+                System.out.println("Adding2 : "+names.get(i));
+            }
+            return almc;
+        } catch(Exception excpArt) {
+            excpArt.printStackTrace();
+            System.out.println("Error en modelo.getAlmacen");
+        } finally {
+            s.close();
+
+        }
+        return null;
+    }
+
+    protected Articulos getArticuloVenta() throws SQLException {
+        Articulos art = new Articulos("",0);
+        return  art;
+
     }
 
 }
