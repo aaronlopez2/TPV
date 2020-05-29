@@ -1,5 +1,6 @@
 package sample;
 
+import dbo.Almacen;
 import dbo.Articulos;
 import dbo.Empleados;
 import javafx.application.Application;
@@ -102,14 +103,14 @@ public class Vista extends Application {
     private void generatePanelDer() throws SQLException {
         ListView<String> list = new ListView<>();
         // go to controller
-        Articulos[] arts = null;
-        if(ctrler.getArticulos() == null) {
+        Almacen[] almcs = null;
+        if(ctrler.getAlmacen() == null) {
             errorPWD("No se han encontrado articulos");
         } else {
-            arts = ctrler.getArticulos();
-            listadoPedidos = new String[arts.length];
+            almcs = ctrler.getAlmacen();
+            listadoPedidos = new String[almcs.length];
             for (int i = 0; i < listadoPedidos.length; i++) {
-                listadoPedidos[i] = arts[i].getMarca() +"-"+ arts[i].getModelo()+" Id: "+ arts[i].getIdArticulo() + " | Precio: " +arts[i].getCoste() + " - Cantidad: "+arts[i].getCantidad();
+                listadoPedidos[i] = almcs[i].getMarca() +"-"+ almcs[i].getModelo()+" Id: "+ almcs[i].getIdArticulo() + " | Precio: " +almcs[i].getCoste() + " - Cantidad: "+almcs[i].getCantidad();
 
             }
         }
@@ -195,15 +196,15 @@ public class Vista extends Application {
     }
 
     private void generateMenuItems() {
-        itemsFile = new MenuItem[10];
+        itemsFile = new MenuItem[1];
         itemsEdit = new MenuItem[10];
         itemsWindow = new MenuItem[10];
-        itemsHelp = new MenuItem[10];
+        itemsHelp = new MenuItem[1];
         for (int i = 0; i < itemsFile.length; i++) {
-            MenuItem itemFile = new MenuItem("TEXTO " + i);
+            MenuItem itemFile = new MenuItem("Cerrar sesion");
             MenuItem itemEdit = new MenuItem("TEXTO " + i);
             MenuItem itemWindow = new MenuItem("TEXTO " + i);
-            MenuItem itemHelp = new MenuItem("TEXTO " + i);
+            MenuItem itemHelp = new MenuItem("Contactar");
             itemsFile[i] = itemFile;
             itemsEdit[i] = itemEdit;
             itemsWindow[i] = itemWindow;
@@ -580,19 +581,13 @@ public class Vista extends Application {
             topTools = new MenuBar(); //bpBaseTpv
             topTools.prefWidthProperty().bind(baseTPV.widthProperty());
 
-            fileMenu = new Menu("ARCHIVO");
+            fileMenu = new Menu("SESION");
             fileMenu.getItems().addAll(itemsFile);
-
-            editMenu = new Menu("EDITAR");
-            editMenu.getItems().addAll(itemsEdit);
-
-            windowMenu = new Menu("VENTANA");
-            windowMenu.getItems().addAll(itemsWindow);
 
             helpMenu = new Menu("AYUDA");
             helpMenu.getItems().addAll(itemsHelp);
 
-            topTools.getMenus().addAll(fileMenu, editMenu, windowMenu, helpMenu);
+            topTools.getMenus().addAll(fileMenu, helpMenu);
         } catch (Exception ex) {
             System.out.println("ALGO HA FALLADO");
         }
@@ -849,7 +844,6 @@ public class Vista extends Application {
     private void administraUsersView() {
         //    private Label user_dni, user_ap1, user_ap2, user_address, user_nss, user_afSind, user_tlf_emp, user_mail, user_pob, user_birth, user_cp;
         //     private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
-
         userLabel = new Label("Nombre");//
         user_dni = new Label("Dni");
         user_ap1 = new Label("Primer Apellido");
@@ -889,16 +883,16 @@ public class Vista extends Application {
         cp_txt = new TextField();
         cp_txt.setPromptText("Codigo Postal");
 
-        Node[] objLbl = {userLabel,user_dni,user_ap1,user_ap2,user_address,user_nss,user_afSind,user_tlf_emp,user_mail,user_pob,user_birth,user_cp,permisoLabel};
-        Node[] objTxt = {name_txt,dni_txt, ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt};
+        Node[] objLbl = {userLabel,user_dni,user_ap1,user_ap2,user_address,user_nss,
+                user_afSind,user_tlf_emp,user_mail,user_pob,user_birth,user_cp,permisoLabel};
+        Node[] objTxt = {name_txt,dni_txt, ap1_txt,ap2_txt,adss_txt,nss_txt
+                ,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt};
 
         ObservableList<String> permis = FXCollections.observableArrayList();
         permis.addAll("1", "2", "3");
         ComboBox<String> cbx = new ComboBox<>(permis);
         cbx.getSelectionModel().selectFirst(); // valor predeterminado
         crearUser = new Button("Crear");
-
-
         volver2 = new Button("Atras");
         // (0,x) (1,y)
         for (int x = 0; x < objLbl.length; x++){
@@ -907,15 +901,11 @@ public class Vista extends Application {
         for(int y = 0; y < objTxt.length; y++) {
             buttonsUserBase.add(objTxt[y],1,y);
         }
-
         buttonsUserBase.add(cbx, 1, objTxt.length);
         buttonsUserBase.add(crearUser, 0, objTxt.length+2);
         buttonsUserBase.add(volver2, 1, objTxt.length+2);
         buttonsUserBase.setVgap(10);
-
         volver2.setOnAction((e) -> {
-            // buttonsUserBase.getChildren().removeAll(userLabel, passLabel, permisoLabel, userField, passField, volver2, cbx, crearUser);
-
             ArrayList<Node> obj_list = new ArrayList();
             ArrayList<Node> obj_list2 = new ArrayList();
             for (int i = 0; i < objLbl.length; i++) {

@@ -100,14 +100,13 @@ public class Controller {
     }
     public Almacen[] getAlmacen() throws SQLException{
         // go to model devuelve un array de objetos articulos
-        if(model.getArticulos() == null) {
+        if(model.getAlmacen() == null) {
             return null;
         } else {
             Almacen[] almc = model.getAlmacen();
             return almc;
         }
     }
-
     public void generarExcel(String[] excel){
 
     }

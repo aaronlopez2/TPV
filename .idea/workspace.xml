@@ -2,19 +2,73 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="352a8c5d-57fd-476f-af28-ee76efd6cecd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/dbo/Almacen.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dbo/Articulos.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/MailMnt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TPV_Deportes/META-INF/TPV_Deportes.kotlin_module" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Modelo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Modelo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Vista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Vista.java" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/sample/Vista.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="201" column="36" lean-forward="true" selection-start-line="201" selection-start-column="36" selection-end-line="201" selection-end-column="36" />
+              <folding>
+                <element signature="e#4669#6463#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Modelo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="290">
+              <caret line="41" column="18" lean-forward="true" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
+              <folding>
+                <element signature="method#autenticar#0;class#Modelo#0" />
+                <element signature="method#permision#0;class#Modelo#0" />
+                <element signature="method#getArticulos#0;class#Modelo#0" />
+                <element signature="method#getAlmacen#0;class#Modelo#0" />
+                <element signature="method#getArticuloVenta#0;class#Modelo#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="108" column="5" selection-start-line="108" selection-start-column="5" selection-end-line="108" selection-end-column="5" />
+              <folding>
+                <element signature="method#autenticar#0;class#Controller#0" />
+                <element signature="method#createUser#0;class#Controller#0" />
+                <element signature="method#generateUser_ID#0;class#Controller#0" />
+                <element signature="method#checkUser#0;class#Controller#0" />
+                <element signature="method#checkPermision#0;class#Controller#0" />
+                <element signature="method#getArticulos#0;class#Controller#0" />
+                <element signature="method#getAlmacen#0;class#Controller#0" />
+                <element signature="method#generarExcel#0;class#Controller#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -23,10 +77,81 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>lo</find>
+      <find>log</find>
+      <find>generarPanelBase</find>
+      <find>generarBotonesBase</find>
+      <find>initArrayButtons</find>
+      <find>getAr</find>
+      <find>getAlmacen</find>
+      <find>barra</find>
+      <find>barraHerramientasPanelBase</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/sample/Controller.java" />
+        <option value="$PROJECT_DIR$/src/sample/Modelo.java" />
+        <option value="$PROJECT_DIR$/src/sample/Vista.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="289" />
+    <option name="y" value="144" />
+    <option name="width" value="1440" />
+    <option name="height" value="780" />
+  </component>
   <component name="ProjectId" id="1WOD1jSEecJTnLXtymr3la0FWik" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="TPV" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TPV" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TPV" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TPV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TPV" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TPV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="dbo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TPV" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TPV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="librerias" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TPV" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TPV" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="sample" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -36,7 +161,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$/src/librerias" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -44,15 +169,28 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\alopezl\Documents\TPV" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\alopezl\IdeaProjects\TPV\src" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="dbo" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\alopezl\IdeaProjects\TPV\src" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Aarón\IdeaProjects\TPV\src" />
+      <recent name="C:\Users\alopezl\Documents\TPV" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration name="Vista" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -98,6 +236,40 @@
       <updated>1579011535063</updated>
     </task>
     <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="aws.explorer" side_tool="true" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="UI Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Learn" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.5030257" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" weight="0.32936078" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.032502707" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Maven" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
   </component>
   <component name="WindowStateProjectService">
     <state x="-1155" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1590605610294">
@@ -164,5 +336,48 @@
       <screen x="-1920" y="0" width="1920" height="1040" />
     </state>
     <state x="-1304" y="240" width="672" height="677" key="run.anything.popup/0.0.1536.824/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1590606966304" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="108" column="5" selection-start-line="108" selection-start-column="5" selection-end-line="108" selection-end-column="5" />
+          <folding>
+            <element signature="method#autenticar#0;class#Controller#0" />
+            <element signature="method#createUser#0;class#Controller#0" />
+            <element signature="method#generateUser_ID#0;class#Controller#0" />
+            <element signature="method#checkUser#0;class#Controller#0" />
+            <element signature="method#checkPermision#0;class#Controller#0" />
+            <element signature="method#getArticulos#0;class#Controller#0" />
+            <element signature="method#getAlmacen#0;class#Controller#0" />
+            <element signature="method#generarExcel#0;class#Controller#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Modelo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="41" column="18" lean-forward="true" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
+          <folding>
+            <element signature="method#autenticar#0;class#Modelo#0" />
+            <element signature="method#permision#0;class#Modelo#0" />
+            <element signature="method#getArticulos#0;class#Modelo#0" />
+            <element signature="method#getAlmacen#0;class#Modelo#0" />
+            <element signature="method#getArticuloVenta#0;class#Modelo#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Vista.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="201" column="36" lean-forward="true" selection-start-line="201" selection-start-column="36" selection-end-line="201" selection-end-column="36" />
+          <folding>
+            <element signature="e#4669#6463#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

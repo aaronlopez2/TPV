@@ -1,0 +1,117 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema tienda2
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema tienda2
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `tienda2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `tienda2` ;
+
+-- -----------------------------------------------------
+-- Table `tienda2`.`almacen`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tienda2`.`almacen` (
+  `IDarticulo_almacen` VARCHAR(5) NOT NULL,
+  `Marca` VARCHAR(15) NULL DEFAULT NULL,
+  `Coste` FLOAT NULL DEFAULT NULL,
+  `Talla` VARCHAR(5) NULL DEFAULT NULL,
+  `Modelo` VARCHAR(10) NULL DEFAULT NULL,
+  `Cantidad` INT(11) NOT NULL,
+  `Estado` VARCHAR(15) NULL DEFAULT NULL,
+  PRIMARY KEY (`IDarticulo_almacen`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `tienda2`.`articulos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tienda2`.`articulos` (
+  `IDarticulo` VARCHAR(5) NOT NULL,
+  `Marca` VARCHAR(15) NULL DEFAULT NULL,
+  `Coste` FLOAT NULL DEFAULT NULL,
+  `Talla` VARCHAR(5) NULL DEFAULT NULL,
+  `Modelo` VARCHAR(10) NULL DEFAULT NULL,
+  `Cantidad` INT(11) NOT NULL,
+  PRIMARY KEY (`IDarticulo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `tienda2`.`empleado`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tienda2`.`empleado` (
+  `Emp_Id` VARCHAR(5) NOT NULL,
+  `dni` VARCHAR(9) NOT NULL,
+  `Nombre` VARCHAR(30) NOT NULL,
+  `Apellido1` VARCHAR(40) NOT NULL,
+  `Apellido2` VARCHAR(40) NOT NULL,
+  `Direccion` VARCHAR(50) NULL DEFAULT NULL,
+  `Num_SS` VARCHAR(25) NULL DEFAULT NULL,
+  `Num_Af_Sindicato` VARCHAR(25) NULL DEFAULT NULL,
+  `Num_telf_emp` VARCHAR(9) NULL DEFAULT NULL,
+  `Num_telf_priv` VARCHAR(9) NULL DEFAULT NULL,
+  `Email` VARCHAR(40) NULL DEFAULT NULL,
+  `Poblacion` VARCHAR(30) NULL DEFAULT NULL,
+  `fechaNacimiento` DATE NULL DEFAULT NULL,
+  `CP` VARCHAR(5) NULL DEFAULT NULL,
+  PRIMARY KEY (`Emp_Id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `tienda2`.`usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tienda2`.`usuario` (
+  `Id_User` VARCHAR(6) NOT NULL,
+  `User_pwd` VARCHAR(20) NOT NULL,
+  `User_lvl` VARCHAR(45) NOT NULL,
+  `User_name` VARCHAR(30) NOT NULL,
+  `empleado_Id` VARCHAR(5) NOT NULL,
+  PRIMARY KEY (`Id_User`, `empleado_Id`),
+  UNIQUE INDEX `Id_User_UNIQUE` (`Id_User` ASC) VISIBLE,
+  INDEX `Emp_FK_idx` (`User_name` ASC) VISIBLE,
+  INDEX `fk_usuario_empleado_idx` (`empleado_Id` ASC) VISIBLE,
+  CONSTRAINT `asd`
+    FOREIGN KEY (`empleado_Id`)
+    REFERENCES `tienda2`.`empleado` (`Emp_Id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `tienda2`.`ventas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tienda2`.`ventas` (
+  `id_ventas` VARCHAR(5) NOT NULL,
+  `fecha_venta` DATE NULL DEFAULT NULL,
+  `articulo_id` VARCHAR(5) NULL DEFAULT NULL,
+  PRIMARY KEY (`id_ventas`),
+  INDEX `fk_articulos_ventas_idx` (`articulo_id` ASC) VISIBLE,
+  CONSTRAINT `fk_articulos_ventas`
+    FOREIGN KEY (`articulo_id`)
+    REFERENCES `tienda2`.`articulos` (`IDarticulo`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
