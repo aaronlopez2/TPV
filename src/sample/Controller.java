@@ -7,6 +7,9 @@ import dbo.Empleados;
 import dbo.Users;
 
 import javax.xml.namespace.QName;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class Controller {
@@ -14,7 +17,7 @@ public class Controller {
     Modelo model = new Modelo();
     Users user;
     Empleados emp;
-
+    Excel gen = new Excel();
 
     public void mensaje(){
         System.out.println("mensaje desde controlador ctrler.mensaje");
@@ -107,8 +110,40 @@ public class Controller {
             return almc;
         }
     }
-    public void generarExcel(String[] excel){
+
+
+    public void generarExcel(String[] excel) throws IOException {
+        //Articulos art = new Articulos();
+        Articulos[] arts;
+        gen.writeExcel();
+    }
+    public void openFolderDoc() throws IOException {
+        File excelFolder = null;
+        String name = "";
+        try {
+
+            name = new com.sun.security.auth.module.NTSystem().getName();
+            System.out.println("USUARIO: " +name);
+            excelFolder = new File("C:\\Users\\"+name+"\\Documents\\excelDoc");
+            boolean f = excelFolder.mkdir();
+            // print
+            System.out.print("Directory created? "+f);
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al crear carpeta");
+        }
+        System.out.println(" USUARIO: " +name);
+        Desktop.getDesktop().open(new File("C:\\Users\\"+name+"\\Documents\\excelDoc"));
 
     }
 
+    public String getPrecio() {
+        // llamar a modelo
+        return "";
+    }
+    public Articulos getProducto(String idProd) throws SQLException {
+        Articulos art = new Articulos(idProd);
+        art = model.getArticuloVenta(art);
+        return art;
+    }
 }

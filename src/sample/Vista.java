@@ -29,6 +29,8 @@ import javafx.stage.Stage;
 //import javax.mail.internet.InternetAddress;
 //import javax.mail.internet.MimeMessage;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -264,15 +266,11 @@ public class Vista extends Application {
             });  // VENTAS
             buttonsBase[2].setOnAction(e -> { // DOCUMENTOS --- LISTADOS
                 try {
-                    generatePaneLateralIzq();
-                } catch (SQLException ex) {
+                   //
+                    ctrler.openFolderDoc();
+
+                } catch (IOException ex) {
                     ex.printStackTrace();
-                }
-                if (visibleLeft) {
-                    bpBaseTpv.setLeft(null);
-                    visibleLeft = false;
-                } else {
-                    visibleLeft = true;
                 }
             }); // DOCUMENTOS --- LISTADOS
             buttonsBase[3].setOnAction(e -> { // MANTENIMIENTO --- AYUDA A SOPORTE --- GMAIL API
@@ -292,12 +290,14 @@ public class Vista extends Application {
     }
 
     private Button volver3, filterButonVentasPane, cleanFilters, pagoButton;
-    private Label modelo, prodNombre,idProducto;
-    private TextField modeloTF,idProductoTf;
+    private Label modelo, prodNombre,idProducto,cantidadProd;
+    private TextField modeloTF,idProductoTf,cantidadProdTF;
 
     private void generateVentasPane() {
         buttonsUserBase.setVgap(20);
         buttonsUserBase.setHgap(40);
+        cantidadProd = new Label("Cantidad: ");
+        cantidadProdTF = new TextField("0");
         idProducto = new Label("ID Product:");
         idProductoTf = new TextField();
         volver3 = new Button("Atras");
@@ -314,6 +314,8 @@ public class Vista extends Application {
         modeloTF = new TextField();
         try {
             cleanFilters.setOnAction((e) -> {
+                idProductoTf.setText("");
+                cantidadProdTF.setText("0");
                 nombreProductoTf.setText("");
                 marcaTF.setText("");
                 modeloTF.setText("");
@@ -332,20 +334,22 @@ public class Vista extends Application {
         } catch (Exception e) {
             popUpAlerta();
         }
-       // buttonsUserBase.add(idProducto, 0,0);
-       // buttonsUserBase.add(idProductoTf,0,0);
-        buttonsUserBase.add(prodNombre, 0, 0);
-        buttonsUserBase.add(nombreProductoTf, 1, 0);
-        buttonsUserBase.add(filterButonVentasPane, 2, 0);
-        buttonsUserBase.add(cleanFilters, 3, 0);
+        buttonsUserBase.add(idProducto, 0,0);
+        buttonsUserBase.add(idProductoTf,1,0);
+        //buttonsUserBase.add(prodNombre, 0, 1);
+        //buttonsUserBase.add(nombreProductoTf, 1, 1);
+        buttonsUserBase.add(filterButonVentasPane, 3, 0);
+        buttonsUserBase.add(cleanFilters, 4, 0);
         buttonsUserBase.add(marca, 0, 1);
-        buttonsUserBase.add(talla, 0, 2);
-        buttonsUserBase.add(modelo, 0, 3);
+        buttonsUserBase.add(talla, 0, 3);
+        buttonsUserBase.add(modelo, 0, 4);
         buttonsUserBase.add(marcaTF, 1, 1);
-        buttonsUserBase.add(tallaTF, 1, 2);
-        buttonsUserBase.add(modeloTF, 1, 3);
-        buttonsUserBase.add(pagoButton, 2, 3);
-        buttonsUserBase.add(volver3, 3, 3);
+        buttonsUserBase.add(tallaTF, 1, 3);
+        buttonsUserBase.add(modeloTF, 1, 4);
+        buttonsUserBase.add(cantidadProd, 0,5);
+        buttonsUserBase.add(cantidadProdTF, 1, 5);
+        buttonsUserBase.add(pagoButton, 3, 5);
+        buttonsUserBase.add(volver3, 4, 5);
     }
 
     private Button volver4, sendEmail;
@@ -356,25 +360,53 @@ public class Vista extends Application {
 
     EventHandler<ActionEvent> actionFilter = (e) -> {
         String idProducto = idProductoTf.getText();
-        String nombreProd = nombreProductoTf.getText();
-        String prodBrand = marcaTF.getText();
-        String tallaProd = tallaTF.getText();
-        String modeloProd = modeloTF.getText();
+        try {
+            Articulos art = ctrler.getProducto(idProducto);
+            marcaTF.setText(art.getMarca());
+            tallaTF.setText(art.getTalla());
+            modeloTF.setText(art.getModelo());
 
-        // conectar con la BBDD para comprobar que hace un select * from articulos where nombre = nombreProd
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error en filtro articulo vista.Eventhandler.actionFilter");
+        }
+
     };
     EventHandler<ActionEvent> actionPago = (e) -> {
+        boolean alerta = false;
         // gestionar el articulo con la base de datos cambiar estado a vendido
         String idProducto = idProductoTf.getText();
-        String nombreProd = nombreProductoTf.getText();
+        //String nombreProd = nombreProductoTf.getText();
         String prodBrand = marcaTF.getText();
         String tallaProd = tallaTF.getText();
         String modeloProd = modeloTF.getText();
-        // buscar en la base de datos el precio del producto y enviarlo tambien
-        int precioProd = 90;
-        String[] data = {idProducto,nombreProd,prodBrand,tallaProd,modeloProd};
-        popUpConfirm("Realizando operacion");
-        ctrler.generarExcel(data);
+        int cantidadProd = Integer.parseInt(cantidadProdTF.getText());
+        String precio = ctrler.getPrecio();
+        if(idProducto.equals("")  || prodBrand.equals("") || tallaProd.equals("") || modeloProd.equals("")) {
+            errorPWD("Rellene los filtros");
+            alerta = true;
+        } else {
+            if(cantidadProd <= 0 && alerta == false) {
+                errorPWD("la cantidad no puede ser menor o igual a 0");
+            } else if(alerta == false){
+                Object[] pagos =
+                        {idProducto, prodBrand,tallaProd,modeloProd}
+                        ;
+                // buscar en la base de datos el precio del producto y enviarlo tambien
+                int precioProd = 90;
+                String[] data = {idProducto,prodBrand,tallaProd,modeloProd};
+                popUpConfirm("Realizando operacion");
+                try {
+                    ctrler.generarExcel(data);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.err.println("Error event handler Pago");
+                }
+            }
+
+        }
+
+
 
     };
 
@@ -486,8 +518,9 @@ public class Vista extends Application {
         bpBaseTpv = new BorderPane();
         gridButtonsContainer = new StackPane();
         baseTPV = new Stage();
+        baseTPV.setTitle("TPV");
         stackBase = new StackPane();
-        stackBase.setStyle("-fx-background-color: #8DAA91");
+        stackBase.setStyle("-fx-background-color: #c5c2ff");
         stackBase.setMaxHeight(screenHeight);
         stackBase.setMaxWidth(screenWidth);
         // se busca el nombre del usuario en la base de datos, en la tabla el tipo de permiso
@@ -495,14 +528,14 @@ public class Vista extends Application {
         int permiso = ctrler.checkPermision(user);
         //int permiso = 3;
         stackBase.getChildren().add(bpBaseTpv);
-        bpBaseTpv.setStyle("-fx-background-color: #486187");
+        bpBaseTpv.setStyle("-fx-background-color: #c5c2ff");
         gridButtonsContainer.setAlignment(Pos.CENTER);
         gridButtonsContainer.setPadding(new Insets(0, 40, 0, 40));
         //gridButtonsContainer.setMaxHeight(screenHeight);
         //gridButtonsContainer.setMaxWidth(screenWidth);
-        gridButtonsContainer.setStyle("-fx-background-color: #B49FCC");
+        gridButtonsContainer.setStyle("-fx-background-color: #c5c2ff");
         bpBaseTpv.setCenter(gridButtonsContainer);
-        bpBaseTpv.setBottom(new Label("PRUEBA DE ETIQUETA Y ESPACIO AVISO LEGAL"));
+        bpBaseTpv.setBottom(new Label("AVISO LEGAL, ESTE SOFTWARE ESTA BAJO LA LICENCIA GNU"));
         switch (permiso) {
             case 0:
                 errorPWD("El usuario no tiene permisos");
@@ -625,7 +658,7 @@ public class Vista extends Application {
                 break;
 
         }
-        buttonsUserBase.setStyle("-fx-background-color: #7C72A0");
+        buttonsUserBase.setStyle("-fx-background-color: #9BBEBF");
         return buttonsUserBase;
     }
 

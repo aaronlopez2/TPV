@@ -186,9 +186,19 @@ public class Modelo {
         return null;
     }
 
-    protected Articulos getArticuloVenta() throws SQLException {
-        Articulos art = new Articulos("",0);
-        return  art;
+    protected Articulos getArticuloVenta(Articulos art) throws SQLException {
+        Statement s = conexion.createStatement();
+        ResultSet rs = s.executeQuery("SELECT * FROM `tienda2`.`articulos` where `IDarticulo` = "+art.getIdArticulo()+";");
+        Articulos art2 = new Articulos(art.getIdArticulo());
+        while(rs.next())
+        {
+            //public Articulos(             String idArticulo, String marca, String talla, String modelo, float coste, int cantidad)
+            art2 = new Articulos(art.getIdArticulo(),rs.getString(2),rs.getString(4),rs.getString(5),rs.getFloat(3),rs.getInt(6));
+            System.out.println(art2.getIdArticulo()+" cantidad :" +art2.getCantidad() + " precio: "+ art2.getCoste());
+        }
+        s.close();
+
+        return  art2;
 
     }
 

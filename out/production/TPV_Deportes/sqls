@@ -1,0 +1,3 @@
+INSERT INTO `tienda2`.`usuario` (`Id_User`, `User_pwd`, `User_lvl`, `User_name`, `empleado_Id`) VALUES ('usuario', 'a', 'admin', 'asdad', '1');
+INSERT INTO `tienda2`.`empleado` (`Emp_Id`, `dni`, `Nombre`, `Apellido1`, `Apellido2`, `Direccion`, `Num_SS`, `Num_Af_Sindicato`, `Num_telf_emp`, `Num_telf_priv`, `Email`) VALUES ('1', 'usuario', '0315005P', 'Usuar', 'asd', 'adasd', 'adada', 'adsads', 'ads', 'adsd', 'asd');
+

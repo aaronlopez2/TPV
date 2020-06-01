@@ -9,6 +9,9 @@ public final class Articulos {
         this.idArticulo = idArticulo;
         this.cantidad = cantidad;
     }
+    public Articulos(String idArticulo) {
+        this.idArticulo = idArticulo;
+    }
 
     public Articulos(String idArticulo, String marca, String talla, String modelo, float coste, int cantidad) {
         this.idArticulo = idArticulo;
