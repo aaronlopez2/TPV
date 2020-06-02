@@ -112,10 +112,9 @@ public class Controller {
     }
 
 
-    public void generarExcel(String[] excel) throws IOException {
-        //Articulos art = new Articulos();
-        Articulos[] arts;
-        gen.writeExcel();
+    public void generarExcel(Object[] excel) throws IOException {
+
+        gen.writeExcel(excel);
     }
     public void openFolderDoc() throws IOException {
         File excelFolder = null;
@@ -137,13 +136,28 @@ public class Controller {
 
     }
 
-    public String getPrecio() {
+    public float getPrecio(String idProd) throws SQLException {
+        float precio = model.getPrecioArticulo(idProd);
         // llamar a modelo
-        return "";
+        return precio;
     }
     public Articulos getProducto(String idProd) throws SQLException {
         Articulos art = new Articulos(idProd);
         art = model.getArticuloVenta(art);
         return art;
+    }
+
+    public boolean getCantidadProd(String idProd, int cant) throws SQLException {
+        boolean stock = model.getCantidad(idProd,cant);
+        return stock;
+    }
+
+    public void pedidoAlmacen(String idProd) {
+        try {
+            model.pedidoAlmacen(idProd);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error en controler.pedidoAlmacen");
+        }
     }
 }

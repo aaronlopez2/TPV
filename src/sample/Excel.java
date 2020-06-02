@@ -13,7 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Excel {
 
-    public void writeExcel() throws IOException{
+    public void writeExcel(Object[] pago) throws IOException{
         File fExcel = null;
         String name = "";
         System.out.println(java.time.LocalDate.now());
@@ -30,29 +30,15 @@ public class Excel {
         String nameFile = "Pago "+java.time.LocalDate.now().toString()+".xlsx";
         String path = "C:\\Users\\"+name+"\\Documents\\excelDoc\\"+nameFile;
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Pago "+java.time.LocalDate.now().toString());
-
+        float precioFinal = (int) pago[4]* (float)pago[5];
+        System.out.println("PRECIO FINAL "+precioFinal);
         Object[][] bookData = {
-                {"Head First Java", "Kathy Serria", 79},
-                {"Effective Java", "Joshua Bloch", 36},
-                {"Clean Code", "Robert martin", 42},
-                {"Thinking in Java", "Bruce Eckel", 35},
-        };
+                //{pago}
+                {"Id Producto","Marca","Talla","Modelo","Cantidad","Precio"},
+                {pago[0].toString(),pago[1].toString(),pago[2].toString(),pago[3].toString(),Integer.parseInt(pago[4].toString()),precioFinal}
 
-        int rowCount = 0;
-        for (Object[] aBook : bookData) {
-            Row row = sheet.createRow(++rowCount);
-            int columnCount = 0;
-            for (Object field : aBook) {
-                Cell cell = row.createCell(++columnCount);
-                if (field instanceof String) {
-                    cell.setCellValue((String) field);
-                } else if (field instanceof Integer) {
-                    cell.setCellValue((Integer) field);
-                }
-            }
-        }
+        };          //0         1       2           3           4           5
+//Object[] data = {idProducto,prodBrand,tallaProd,modeloProd,cantidadProd,precio};
 
 
         File excExist = new File(path);
@@ -62,18 +48,19 @@ public class Excel {
                 FileInputStream file = new FileInputStream(new File(path));
                 XSSFWorkbook workbook2 = new XSSFWorkbook(file);
                 XSSFSheet sheet2 = workbook2.getSheet("Pago "+java.time.LocalDate.now().toString());
-                System.out.println("Numero de hoja "+sheet2);
+                System.out.println("PRIMERA FILA "+sheet2.getFirstRowNum());
                 int lastRow = sheet2.getLastRowNum();
+                System.out.println("ULTIMA FILA "+lastRow);
+                precioFinal = (int)pago[4] * (float)pago[5];
+                System.out.println("PRECIO FINAL "+precioFinal);
                 Object[][] bookData2 = {
-                        {"Head First JavaASDADASD", "Kathy SerriaASDAD", 79},
-                        {"Effective Java", "Joshua Bloch", 36},
-                        {"Clean Code", "Robert martin", 42},
-                        {"Thinking in Java", "Bruce Eckel", 35},
+                        //{pago}
+                        {pago[0].toString(),pago[1].toString(),pago[2].toString(),pago[3].toString(),Integer.parseInt(pago[4].toString()),precioFinal}
                 };
 
                 int rowCount2 = lastRow;
                 for (Object[] aBook : bookData2) {
-                    Row row = sheet.createRow(++rowCount2);
+                    Row row = sheet2.createRow(++rowCount2);
                     int columnCount = 0;
                     for (Object field : aBook) {
                         Cell cell = row.createCell(++columnCount);
@@ -81,31 +68,54 @@ public class Excel {
                             cell.setCellValue((String) field);
                         } else if (field instanceof Integer) {
                             cell.setCellValue((Integer) field);
+                        } else if (field instanceof Float) {
+                            cell.setCellValue((Float) field);
                         }
                     }
                 }
                 file.close();
                 FileOutputStream outFile =new FileOutputStream(new File(path));
-                workbook.write(outFile);
+                workbook2.write(outFile);
                 outFile.close();
             } catch (FileNotFoundException fio) {
                 fio.printStackTrace();
             }
 
         } else {
-            try (FileOutputStream outputStream = new FileOutputStream("C:\\Users\\"+name+"\\Documents\\excelDoc\\"+nameFile)) {
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("Pago "+java.time.LocalDate.now().toString());
 
-                workbook.write(outputStream);
-                outputStream.close();
+            System.out.println("PRECIO :"+Float.parseFloat(pago[5].toString()));
+            int rowCount = 0;
+            for (Object[] aBook : bookData) {
+                Row row = sheet.createRow(++rowCount);
+                int columnCount = 0;
+                for (Object field : aBook) {
+                    Cell cell = row.createCell(++columnCount);
+                    if (field instanceof String) {
+                        cell.setCellValue((String) field);
+                    } else if (field instanceof Integer) {
+                        cell.setCellValue((Integer) field);
+                    } else if (field instanceof Float) {
+                        cell.setCellValue((Float) field);
+                    }
+                }
             }
+            //file.close();
+            FileOutputStream outFile =new FileOutputStream(new File(path));
+            workbook.write(outFile);
+            outFile.close();
+
+
         }
 
 
+
+
+
+
     }
 
-    public void recorrerExcel() throws  IOException{
-
-    }
 
 
 }

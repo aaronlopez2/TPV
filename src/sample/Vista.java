@@ -23,17 +23,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 //import javax.mail.*;
 //import javax.mail.internet.InternetAddress;
 //import javax.mail.internet.MimeMessage;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Vista extends Application {
@@ -80,13 +82,13 @@ public class Vista extends Application {
     // creacion usuarios
     private TextField dni_txt,name_txt,ap1_txt,ap2_txt,adss_txt,nss_txt,nafSind_txt,ntlf_txt,email_txt,pob_txt,dateB_txt,cp_txt;
     // creacion usuarios
-    private TextField nombreProductoTf;
+    private TextField prodPrecioTF;
     private TextField marcaTF;
     private TextField tallaTF;
 
     private PasswordField pwdTxtf;
-    private TextField userField;
-    private TextField passField;
+    //private TextField userField;
+    //private TextField passField;
 
     // MenuBar, menu, menuItems
     private MenuBar topTools;
@@ -112,7 +114,7 @@ public class Vista extends Application {
             almcs = ctrler.getAlmacen();
             listadoPedidos = new String[almcs.length];
             for (int i = 0; i < listadoPedidos.length; i++) {
-                listadoPedidos[i] = almcs[i].getMarca() +"-"+ almcs[i].getModelo()+" Id: "+ almcs[i].getIdArticulo() + " | Precio: " +almcs[i].getCoste() + " - Cantidad: "+almcs[i].getCantidad();
+                listadoPedidos[i] =" Id: "+ almcs[i].getIdArticulo()+" - "+ almcs[i].getMarca() +" - "+ almcs[i].getModelo() + " | Precio: " +almcs[i].getCoste() + " - Cantidad: "+almcs[i].getCantidad();
 
             }
         }
@@ -123,7 +125,24 @@ public class Vista extends Application {
         list.prefHeightProperty().bind(listContainer.heightProperty());
         list.setOnMouseClicked(e -> {
             if(e.getClickCount() == 2) {
-                System.out.println("DOBLE CLICK EN UN ELEMENTO DE LA LISTA");;
+                System.out.println("DOBLE CLICK EN UN ELEMENTO DE LA LISTA "+list.getSelectionModel().getSelectedItem());
+                String element = list.getSelectionModel().getSelectedItem();
+                System.out.println(element.substring(0,10));
+                System.out.println(element.substring(4,10));
+                System.out.println(element.substring(4,10).replace(" ",""));
+                element = element.substring(4,10).replace(" ","");
+                element = element.replace("-","");
+                System.out.println("ID PRODUCTO: "+element);
+                ctrler.pedidoAlmacen(element);
+                bpBaseTpv.setLeft(null);
+                bpBaseTpv.setRight(null);
+                try {
+                    generatePaneLateralIzq();
+                    generatePanelDer();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("error al cargar listado productos Vista.generatePaneDer setOnMouseClicked");
+                }
             }
 
         });
@@ -199,18 +218,15 @@ public class Vista extends Application {
 
     private void generateMenuItems() {
         itemsFile = new MenuItem[1];
-        itemsEdit = new MenuItem[10];
-        itemsWindow = new MenuItem[10];
         itemsHelp = new MenuItem[1];
         for (int i = 0; i < itemsFile.length; i++) {
             MenuItem itemFile = new MenuItem("Cerrar sesion");
-            MenuItem itemEdit = new MenuItem("TEXTO " + i);
-            MenuItem itemWindow = new MenuItem("TEXTO " + i);
             MenuItem itemHelp = new MenuItem("Contactar");
+
             itemsFile[i] = itemFile;
-            itemsEdit[i] = itemEdit;
-            itemsWindow[i] = itemWindow;
+            itemsFile[i].setOnAction(cerrarSesion);
             itemsHelp[i] = itemHelp;
+            itemsHelp[i].setOnAction(enviarCorreo);
         }
     } // generar barra de herramientas
 
@@ -290,7 +306,7 @@ public class Vista extends Application {
     }
 
     private Button volver3, filterButonVentasPane, cleanFilters, pagoButton;
-    private Label modelo, prodNombre,idProducto,cantidadProd;
+    private Label modelo, prodPrecio,idProducto,cantidadProd;
     private TextField modeloTF,idProductoTf,cantidadProdTF;
 
     private void generateVentasPane() {
@@ -304,10 +320,10 @@ public class Vista extends Application {
         pagoButton = new Button("Pago");
         filterButonVentasPane = new Button("Filtrar");
         cleanFilters = new Button("Limpiar filtros");
-        nombreProductoTf = new TextField();
+        prodPrecioTF = new TextField();
         marcaTF = new TextField();
         tallaTF = new TextField();
-        prodNombre = new Label("NOMBRE");
+        prodPrecio = new Label("PRECIO");
         marca = new Label("MARCA");
         talla = new Label("TALLA");
         modelo = new Label("MODELO");
@@ -316,13 +332,13 @@ public class Vista extends Application {
             cleanFilters.setOnAction((e) -> {
                 idProductoTf.setText("");
                 cantidadProdTF.setText("0");
-                nombreProductoTf.setText("");
+                prodPrecioTF.setText("");
                 marcaTF.setText("");
                 modeloTF.setText("");
                 tallaTF.setText("");
             });
             volver3.setOnAction((e) -> {
-                buttonsUserBase.getChildren().removeAll(nombreProductoTf, marca, tallaTF, prodNombre,
+                buttonsUserBase.getChildren().removeAll(prodPrecioTF, marca, tallaTF, prodPrecio,
                         filterButonVentasPane, pagoButton,
                         marcaTF, talla, volver3, cleanFilters,
                         modelo, modeloTF);
@@ -336,8 +352,8 @@ public class Vista extends Application {
         }
         buttonsUserBase.add(idProducto, 0,0);
         buttonsUserBase.add(idProductoTf,1,0);
-        //buttonsUserBase.add(prodNombre, 0, 1);
-        //buttonsUserBase.add(nombreProductoTf, 1, 1);
+        buttonsUserBase.add(prodPrecio, 0, 2);
+        buttonsUserBase.add(prodPrecioTF, 1, 2);
         buttonsUserBase.add(filterButonVentasPane, 3, 0);
         buttonsUserBase.add(cleanFilters, 4, 0);
         buttonsUserBase.add(marca, 0, 1);
@@ -357,7 +373,7 @@ public class Vista extends Application {
     private ComboBox sendToCB;
     private TextArea contextTA;
     private Label emailTo, emailTitle, emailMessage;
-
+    MailMnt mail = new MailMnt();
     EventHandler<ActionEvent> actionFilter = (e) -> {
         String idProducto = idProductoTf.getText();
         try {
@@ -365,9 +381,17 @@ public class Vista extends Application {
             marcaTF.setText(art.getMarca());
             tallaTF.setText(art.getTalla());
             modeloTF.setText(art.getModelo());
-
+            prodPrecioTF.setText(String.valueOf(art.getCoste()) +  "\u20ac");
+            if(marcaTF.getText().equals("")) {
+                popUpAlerta("No se encuentra articulo");
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
+            popUpAlerta("No se encuentra articulo");
+            System.out.println("Error en filtro articulo vista.Eventhandler.actionFilter");
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+            popUpAlerta("No se encuentra articulo");
             System.out.println("Error en filtro articulo vista.Eventhandler.actionFilter");
         }
 
@@ -376,12 +400,18 @@ public class Vista extends Application {
         boolean alerta = false;
         // gestionar el articulo con la base de datos cambiar estado a vendido
         String idProducto = idProductoTf.getText();
-        //String nombreProd = nombreProductoTf.getText();
         String prodBrand = marcaTF.getText();
         String tallaProd = tallaTF.getText();
         String modeloProd = modeloTF.getText();
         int cantidadProd = Integer.parseInt(cantidadProdTF.getText());
-        String precio = ctrler.getPrecio();
+
+        float precio = 0;
+        try {
+            precio = ctrler.getPrecio(idProducto);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("error en EventHandler call.getPrecio vista.actionPago");
+        }
         if(idProducto.equals("")  || prodBrand.equals("") || tallaProd.equals("") || modeloProd.equals("")) {
             errorPWD("Rellene los filtros");
             alerta = true;
@@ -389,18 +419,21 @@ public class Vista extends Application {
             if(cantidadProd <= 0 && alerta == false) {
                 errorPWD("la cantidad no puede ser menor o igual a 0");
             } else if(alerta == false){
-                Object[] pagos =
-                        {idProducto, prodBrand,tallaProd,modeloProd}
-                        ;
-                // buscar en la base de datos el precio del producto y enviarlo tambien
-                int precioProd = 90;
-                String[] data = {idProducto,prodBrand,tallaProd,modeloProd};
-                popUpConfirm("Realizando operacion");
                 try {
-                    ctrler.generarExcel(data);
+                    if(ctrler.getCantidadProd(idProducto,cantidadProd)) {
+                        Object[] data = {idProducto, prodBrand, tallaProd, modeloProd, cantidadProd, precio};
+                        popUpConfirm("Realizando operacion");
+                        ctrler.generarExcel(data);
+                    } else {
+                        System.out.println("NO SE HA PODIDO REALIZAR LA ACCION");
+                        errorPWD("NO HAY STOCK SUFICIENTE");
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     System.err.println("Error event handler Pago");
+                } catch (SQLException sqlx){
+                    sqlx.printStackTrace();
+                    System.out.println("ERROR AL RECOGER CANTIDAD event handler Pago");
                 }
             }
 
@@ -410,6 +443,21 @@ public class Vista extends Application {
 
     };
 
+    EventHandler<ActionEvent> cerrarSesion = (e) -> {
+        this.baseTPV.close();
+        this.loginTPV.show();
+        userTxtf.clear();
+        pwdTxtf.clear();
+    };
+    EventHandler<ActionEvent> enviarCorreo = (e) -> {
+        mail.enviar_correo();
+    };
+    EventHandler<ActionEvent> mntEnviarCorreo = (e) -> {
+        String as = titleTF.getText();
+        String emailTO = (String) sendToCB.getSelectionModel().getSelectedItem();
+        String msj = contextTA.getText();
+        mail.enviar_correo(emailTO,as,msj);
+    };
 
     private void generatePaneLateralIzq() throws SQLException {
         ListView<String> list = new ListView<>();
@@ -421,7 +469,8 @@ public class Vista extends Application {
             arts = ctrler.getArticulos();
             listadoPedidos = new String[arts.length];
             for (int i = 0; i < listadoPedidos.length; i++) {
-                listadoPedidos[i] = arts[i].getMarca() +"-"+ arts[i].getModelo()+" Id: "+ arts[i].getIdArticulo() + " | Precio: " +arts[i].getCoste() + " - Cantidad: "+arts[i].getCantidad();
+                listadoPedidos[i] ="Id: "+ arts[i].getIdArticulo() +" - "+ arts[i].getMarca() +" - "+ arts[i].getModelo()+" Precio: " +arts[i].getCoste() + " - Cantidad: "+arts[i].getCantidad();
+
 
             }
         }
@@ -735,6 +784,7 @@ public class Vista extends Application {
 
     }
 
+
     private boolean popUpConfirm() {
         alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
@@ -752,46 +802,11 @@ public class Vista extends Application {
     }
 
 
-    MailMnt mail = new MailMnt();
+
     private void generateEmailPanel() {
         volver4 = new Button("Atras");
         sendEmail = new Button("Enviar");
-        sendEmail.setOnAction((e) -> {
-            //if (popUpConfirm()) {
-                /*
-                * Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class",
-				"javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
-                *
-                * */
-               // Properties properties = System.getProperties();
-               // properties.put("smtp.gmail.com", "aaronlopezlopez2@gmail.com");
-               // properties.put("smtp.gmail.com","465");
-               // properties.put("mail.smtp.socketFactory.class",
-               //         "javax.net.ssl.SSLSocketFactory");
-                //Session session = Session.getDefaultInstance(properties,
-                //        new javax.mail.Authenticator() {
-                //            protected PasswordAuthentication getPasswordAuthentication() {
-                //                return new PasswordAuthentication("aaronlopezlopez2@gmail.com","TumDdujMCeyW4RD");
-                //            }
-                //        });
-                //try {
-                //    MimeMessage message = new MimeMessage(session);
-                //    message.setFrom(new InternetAddress("aaronlopezlopez2@gmail.com"));
-                //    message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("aaronlopezlopez2@gmail.com"));
-                //    message.setSubject(titleTF.getText());
-                //    message.setText(contextTA.getText());
-                //    Transport.send(message);
-                //    System.out.println("message sent successfully....");
-                //} catch (MessagingException ex) {
-                //    System.err.println("ERROR AL ENVIAR");
-                //}
-                //}
-        });
+        sendEmail.setOnAction(mntEnviarCorreo);
 
         volver4.setOnAction((e) -> {
             buttonsUserBase.getChildren().removeAll(volver4, titleTF, sendToCB, emailMessage, sendEmail
@@ -802,13 +817,15 @@ public class Vista extends Application {
         emailTo = new Label("Para :");
         emailTitle = new Label("Asunto :");
         sendToCB = new ComboBox<String>();
-        sendToCB.getItems().addAll("alopez@inlogiq.com", "jjerez@inlogiq.com");
+        sendToCB.getItems().addAll("alopez@inlogiq.com", "jjerez@inlogiq.com", "tiendamntefep@gmail.com");
         titleTF = new TextField();
         emailMessage = new Label("Mensaje");
+        BorderPane bdPaneMen = new BorderPane();
+        bdPaneMen.setTop(emailMessage);
         contextTA = new TextArea();
         buttonsUserBase.add(emailTo, 0, 0);
         buttonsUserBase.add(emailTitle, 0, 1);
-        buttonsUserBase.add(emailMessage, 0, 2);
+        buttonsUserBase.add(bdPaneMen, 0, 2);
         buttonsUserBase.add(sendEmail, 0, 3);
         buttonsUserBase.add(sendToCB, 1, 0);
         buttonsUserBase.add(titleTF, 1, 1);
@@ -831,7 +848,7 @@ public class Vista extends Application {
         alert.setTitle("Confirm Dialog");
         alert.setHeaderText("Look, a Confirm Dialog");
         alert.setContentText(info);
-        alert.setHeight(500);
+        alert.setHeight(300);
         alert.showAndWait();
 
     }

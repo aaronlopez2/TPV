@@ -135,10 +135,10 @@ public class Modelo {
 
             while(rs.next())
             {
-                System.out.println("Adding : "+ rs.getString(1)+"-"+rs.getString(2)+"-"+rs.getString(4)+"-"+rs.getString(5)+"-precio : "+rs.getFloat(3)+"- cantidad: "+rs.getInt(6));
+                //System.out.println("Adding : "+ rs.getString(1)+"-"+rs.getString(2)+"-"+rs.getString(4)+"-"+rs.getString(5)+"-precio : "+rs.getFloat(3)+"- cantidad: "+rs.getInt(6));
                 art = new Articulos(rs.getString(1),rs.getString(2),rs.getString(4),rs.getString(5),rs.getFloat(3),rs.getInt(6)); //String idArticulo, String marca, String talla, String modelo, float coste, int cantidad
                 names.add(art);
-                System.out.println("-------------------------- FIN ITERACION --------------------------");
+                //System.out.println("-------------------------- FIN ITERACION --------------------------");
             }
             arts = new Articulos[names.size()];
             for (int i = 0; i < arts.length; i++) {
@@ -200,6 +200,134 @@ public class Modelo {
 
         return  art2;
 
+    }
+    protected float getPrecioArticulo(String idArticulo) throws  SQLException {
+        Statement s = conexion.createStatement();
+        System.out.println(idArticulo);
+        float coste = 0;
+        try {
+            ResultSet rs = s.executeQuery("SELECT coste FROM `tienda2`.`articulos` WHERE IDarticulo = '"+idArticulo+"';");
+            while (rs.next())
+            {
+                coste = rs.getFloat(1);
+                System.out.println("EL COSTE DEL PRODUCTO ES "+coste);
+            }
+        }catch (SQLException sqex){
+            sqex.printStackTrace();
+            System.out.println("ERROR AL OBTENER EL COSTE DEL ARTICULO modelo.getPrecioArticulo");
+        } finally {
+            s.close();
+        }
+
+        return coste;
+    }
+    protected boolean getCantidad(String idArticulo, int cantidadPedida) throws  SQLException {
+        Statement s = conexion.createStatement();
+        Statement s2 = conexion.createStatement();
+        System.out.println(idArticulo);
+        int cantidad = 0;
+        try {
+            ResultSet rs = s.executeQuery("SELECT Cantidad FROM `tienda2`.`articulos` WHERE IDarticulo = '"+idArticulo+"';");
+            while (rs.next())
+            {
+                cantidad = rs.getInt(1);
+                System.out.println("HAY "+cantidad+ " PRODUCTOS");
+            }
+
+            if(cantidadPedida > cantidad) {
+                return false;
+            } else {
+                int cantidadRestar = cantidad - cantidadPedida;
+                //UPDATE `tienda2`.`articulos` SET `Cantidad` = '4' WHERE (`IDarticulo` = '1243');
+                int rs2 = s2.executeUpdate("UPDATE `tienda2`.`articulos` SET `Cantidad` = '"+cantidadRestar+"' WHERE (`IDarticulo` = '"+idArticulo+"');");
+                System.out.println("Filas afectadas: "+rs2);
+                return true;
+            }
+
+
+        }catch (SQLException sqex){
+            sqex.printStackTrace();
+            System.out.println("ERROR AL REALIZAR UPDATE DE LA CANTIDAD DEL ARTICULO modelo.getCantidad");
+        } finally {
+            s2.close();
+            s.close();
+        }
+
+        return false;
+    }
+    protected int getCantidadArt(String idArticulo) throws  SQLException {
+        Statement s = conexion.createStatement();
+        Statement s2 = conexion.createStatement();
+        System.out.println(idArticulo);
+        int cantidad = 0;
+        try {
+            ResultSet rs = s.executeQuery("SELECT Cantidad FROM `tienda2`.`articulos` WHERE IDarticulo = '"+idArticulo+"';");
+            while (rs.next())
+            {
+                cantidad = rs.getInt(1);
+                System.out.println("HAY "+cantidad+ " PRODUCTOS");
+            }
+            return cantidad;
+
+        }catch (SQLException sqex){
+            sqex.printStackTrace();
+            System.out.println("ERROR AL REALIZAR UPDATE DE LA CANTIDAD DEL ARTICULO modelo.getCantidad");
+        } finally {
+            s2.close();
+            s.close();
+        }
+        return 0;
+    }
+    protected void pedidoAlmacen(String idArticulo) throws SQLException {
+        Statement s = conexion.createStatement();
+        Statement s2 = conexion.createStatement();
+        Statement s3 = conexion.createStatement();
+        Statement s4 = conexion.createStatement();
+        try{
+            ResultSet rs = s.executeQuery("SELECT IDarticulo from `tienda2`.`articulos` WHERE IDarticulo = '"+idArticulo+"'");
+            if(rs.next()) {
+                System.out.println("ARTICULO EXISTE EN LA TABLA");
+                int cantidad = getCantidadArt(idArticulo) + 1;
+                int rs2 = s2.executeUpdate("UPDATE `tienda2`.`articulos` SET `Cantidad` = '"+cantidad+"' WHERE (`IDarticulo` = '"+idArticulo+"')");
+                // UPDATE `tienda2`.`articulos` SET `Cantidad` = '4' WHERE (`IDarticulo` = '1243');
+                System.out.println("Actualizando articulos "+rs2);
+                ResultSet rs3 = s3.executeQuery("SELECT * from `tienda2`.`almacen` WHERE IDarticulo_almacen = '"+idArticulo+"'");
+                int cantidadAlmacen = 0;
+                if(rs3.next()) {
+                    //int rs2 = s2.executeUpdate("INSERT INTO `tienda2`.`articulos` (`IDarticulo`, `Marca`, `Coste`, `Talla`, `Modelo`, `Cantidad`) VALUES ('"+rs3.getString(1)+"', '"+rs3.getString(2)+"', '"+rs3.getFloat(3)+"', '"+rs3.getString(4)+"', '"+rs3.getString(5)+"', '"+1+"')");
+                    cantidadAlmacen = rs3.getInt(6) - 1;
+                    if(cantidadAlmacen < 0) {
+
+                    } else {
+                        int rs4 = s4.executeUpdate("UPDATE `tienda2`.`almacen` SET `Cantidad` = '"+cantidadAlmacen+"' WHERE (`IDarticulo_almacen` = '"+idArticulo+"');");
+                    }
+
+                }
+
+            } else {
+                ResultSet rs3 = s3.executeQuery("SELECT * from `tienda2`.`almacen` WHERE IDarticulo_almacen = '"+idArticulo+"'");
+                int cantidadAlmacen = 0;
+                if(rs3.next()) {
+                    int rs2 = s2.executeUpdate("INSERT INTO `tienda2`.`articulos` (`IDarticulo`, `Marca`, `Coste`, `Talla`, `Modelo`, `Cantidad`) VALUES ('"+rs3.getString(1)+"', '"+rs3.getString(2)+"', '"+rs3.getFloat(3)+"', '"+rs3.getString(4)+"', '"+rs3.getString(5)+"', '"+1+"')");
+                    cantidadAlmacen = rs3.getInt(6) - 1;
+                    if(cantidadAlmacen < 0) {
+
+                    } else {
+                        int rs4 = s4.executeUpdate("UPDATE `tienda2`.`almacen` SET `Cantidad` = '"+cantidadAlmacen+"' WHERE (`IDarticulo_almacen` = '"+idArticulo+"');");
+                    }
+                }
+
+
+            }
+        } catch (SQLException sqlx) {
+            sqlx.printStackTrace();
+            System.out.println("ERROR EN Modelo.pedidoAlmacen");
+        } finally {
+            s4.close();
+            s3.close();
+            s2.close();
+            s.close();
+        }
     }
 
 }
